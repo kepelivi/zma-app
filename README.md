@@ -1,2 +1,2 @@
 # zma-app
-ZMA is a song request app for events with live music.
+ZMA (Zene Minden Alkalomra) is a song request app for events with live music. The guests can scan the QR code on the spot and send any song they want to hear being played by typing it in or searching the name/artist with the help of Spotify API. Once someone requests a song, the application displays it on the DJ's screen so they know what to play. The DJ can also confirm a song if they decide to put it on, or reject it if they don't want to or can't play it.
