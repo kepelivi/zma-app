@@ -30,7 +30,7 @@ var config =
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ILogger, LoggerBase>();
+builder.Services.AddSingleton<ILogger, ConsoleLogger>();
 builder.Services.AddScoped<AuthenticationSeeder>();
 
 builder.Services.AddDbContext<ZMAContext>((container, options) =>
@@ -50,8 +50,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("MyAllowSpecificOrigins");
-
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
