@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>cb2e6f28-66b6-4db0-896f-03f4013d1f68</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,8 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Model\" />
-      <Folder Include="Services\" />
+      <Folder Include="Services\Authentication\" />
       <Folder Include="Utility\" />
     </ItemGroup>
 

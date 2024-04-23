@@ -1,4 +1,16 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using ZMA.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var config =
+    new ConfigurationBuilder()
+        .AddUserSecrets<Program>()
+        .Build();
 
 builder.Services.AddControllers();
 
@@ -6,6 +18,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<ZMAContext>((container, options) =>
+    options.UseSqlServer(config["ConnectionString"]));
 
 AddCors();
 
@@ -50,4 +65,3 @@ void AddCors()
             });
     });
 }
-
