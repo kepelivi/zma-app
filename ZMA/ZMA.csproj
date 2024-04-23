@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\Authentication\" />
+      <Folder Include="Services\Repositories\" />
     </ItemGroup>
 
 </Project>

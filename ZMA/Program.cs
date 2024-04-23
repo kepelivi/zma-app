@@ -1,27 +1,40 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using ZMA.Data;
+using ZMA.Services.Authentication;
+using Host = ZMA.Model.Host;
 
 var builder = WebApplication.CreateBuilder(args);
+
+ConfigureSwagger();
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 var config =
     new ConfigurationBuilder()
         .AddUserSecrets<Program>()
         .Build();
 
-builder.Services.AddControllers();
-
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<AuthenticationSeeder>();
 
 builder.Services.AddDbContext<ZMAContext>((container, options) =>
     options.UseSqlServer(config["ConnectionString"]));
 
+AddAuthentication();
+AddIdentity();
 AddCors();
 
 var app = builder.Build();
@@ -39,7 +52,45 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
+using var scope = app.Services.CreateScope();
+var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
+
+authenticationSeeder.AddRole();
+
+authenticationSeeder.AddHost();
+
 app.Run();
+
+void ConfigureSwagger()
+{
+    builder.Services.AddSwaggerGen(option =>
+    {
+        option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+        option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter a valid token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = "Bearer"
+        });
+        option.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[] { }
+            }
+        });
+    });
+}
 
 void AddCors()
 {
@@ -64,4 +115,63 @@ void AddCors()
                     });
             });
     });
+}
+
+void AddAuthentication()
+{
+    builder.Services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            var issuerSignInKey = config["IssuerSigningKey"] != null
+                ? config["IssuerSigningKey"] : Environment.GetEnvironmentVariable("ISSUERSIGNINGKEY");
+            var validIssuer = config["ValidIssuer"] != null
+                ? config["ValidIssuer"] : Environment.GetEnvironmentVariable("VALIDISSUER");
+            var validAudience = config["ValidAudience"] != null
+                ? config["ValidAudience"] : Environment.GetEnvironmentVariable("VALIDAUDIENCE");
+        
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ClockSkew = TimeSpan.Zero,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = validIssuer,
+                ValidAudience = validAudience,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(issuerSignInKey)
+                ),
+            };
+            options.Events = new JwtBearerEvents();
+            options.Events.OnMessageReceived = context =>
+             {
+                 if (context.Request.Cookies.ContainsKey("Host"))
+                 {
+                     context.Token = context.Request.Cookies["Host"];
+                 }
+            
+                 return Task.CompletedTask;
+             };
+        });
+    builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<ITokenService, TokenService>();
+}
+
+void AddIdentity()
+{
+    builder.Services
+        .AddIdentityCore<Host>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = false;
+            options.User.RequireUniqueEmail = true;
+            options.Password.RequireDigit = true;
+            options.Password.RequiredLength = 8;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireLowercase = true;
+        })
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<ZMAContext>();
+    
 }
