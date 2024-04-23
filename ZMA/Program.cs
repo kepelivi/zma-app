@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ZMA.Data;
 using ZMA.Services.Authentication;
+using ZMA.Services.Repositories;
 using ZMA.Utility;
 using Host = ZMA.Model.Host;
 using ILogger = ZMA.Utility.ILogger;
@@ -31,6 +32,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ILogger, ConsoleLogger>();
+builder.Services.AddTransient<IPartyRepository, PartyRepository>();
 builder.Services.AddScoped<AuthenticationSeeder>();
 
 builder.Services.AddDbContext<ZMAContext>((container, options) =>
