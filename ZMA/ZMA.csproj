@@ -25,7 +25,6 @@
 
     <ItemGroup>
       <Folder Include="Services\Authentication\" />
-      <Folder Include="Utility\" />
     </ItemGroup>
 
 </Project>
