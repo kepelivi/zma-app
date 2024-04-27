@@ -155,6 +155,7 @@ void AddAuthentication()
                  if (context.Request.Cookies.ContainsKey("Host"))
                  {
                      context.Token = context.Request.Cookies["Host"];
+                     Console.WriteLine(context.Token);
                  }
             
                  return Task.CompletedTask;

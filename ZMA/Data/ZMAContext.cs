@@ -23,6 +23,8 @@ public class ZMAContext : IdentityDbContext<Host, IdentityRole, string>
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<Party>().Property(p => p.Details).IsRequired(false);
+
         builder.Entity<Party>()
             .HasOne(p => p.Host)
             .WithMany();
