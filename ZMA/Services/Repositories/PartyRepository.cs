@@ -30,7 +30,7 @@ public class PartyRepository : IPartyRepository
             throw new Exception("Host not found for creating a party.");
         }
 
-        var createdParty = new Party { Host = host, Date = DateTime.Now };
+        var createdParty = new Party { Name = party.Name, Host = host, Date = party.Date, Category = party.Category, Details = party.Details};
 
         _dbContext.Parties.Add(createdParty);
         _dbContext.SaveChanges();
