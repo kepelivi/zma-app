@@ -35,4 +35,20 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
             return NotFound("Creating party failed.");
         }
     }
+
+    [HttpGet("GetParty"), Authorize(Roles = "Host")]
+    public async Task<ActionResult<Party>> GetParty([Required] int Id)
+    {
+        try
+        {
+            var party = partyRepository.GetParty(Id);
+
+            return Ok(party);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e.Message);
+            return NotFound("Retrieving party failed.");
+        }
+    }
 }
