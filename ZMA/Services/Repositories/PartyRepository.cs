@@ -35,4 +35,16 @@ public class PartyRepository : IPartyRepository
         _dbContext.Parties.Add(createdParty);
         _dbContext.SaveChanges();
     }
+
+    public Party GetParty(int id)
+    {
+        var party = _dbContext.Parties.Find(id);
+
+        if (party == null)
+        {
+            throw new Exception("Party not found.");
+        }
+
+        return party;
+    }
 }
