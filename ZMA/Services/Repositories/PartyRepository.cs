@@ -36,7 +36,7 @@ public class PartyRepository : IPartyRepository
         _dbContext.SaveChanges();
     }
 
-    public Party GetParty(int id)
+    public Party GetParty(Guid id)
     {
         var party = _dbContext.Parties.Find(id);
 
@@ -46,5 +46,38 @@ public class PartyRepository : IPartyRepository
         }
 
         return party;
+    }
+
+    public void RequestSong(Song song, Guid partyId)
+    {
+        var party = _dbContext.Parties.FirstOrDefault(p => p.Id == partyId);
+
+        if (party == null)
+        {
+            throw new Exception("Party not found.");
+        }
+        
+        party.Queue.Add(song);
+        _dbContext.SaveChanges();
+    }
+
+    public void AcceptSong(int songId, bool accept)
+    {
+        var party = _dbContext.Parties.Include(party => party.Queue).FirstOrDefault(p => p.Queue.Any(s => s.Id == songId));
+
+        if (party == null)
+        {
+            throw new Exception("Party not found.");
+        }
+        
+        var song = party?.Queue.FirstOrDefault(s => s.Id == songId);
+
+        if (song == null)
+        {
+            throw new Exception("Song not found.");
+        }
+        
+        song.Accepted = accept;
+        _dbContext.SaveChanges();
     }
 }

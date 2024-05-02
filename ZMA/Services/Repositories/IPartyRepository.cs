@@ -5,5 +5,7 @@ namespace ZMA.Services.Repositories;
 public interface IPartyRepository
 {
     void CreateParty(Party party);
-    Party GetParty(int id);
+    Party GetParty(Guid id);
+    void RequestSong(Song song, Guid partyId);
+    void AcceptSong(int songId, bool accept);
 }

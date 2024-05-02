@@ -37,11 +37,11 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     }
 
     [HttpGet("GetParty"), Authorize(Roles = "Host")]
-    public async Task<ActionResult<Party>> GetParty([Required] int Id)
+    public async Task<ActionResult<Party>> GetParty([Required] Guid id)
     {
         try
         {
-            var party = partyRepository.GetParty(Id);
+            var party = partyRepository.GetParty(id);
 
             return Ok(party);
         }
@@ -49,6 +49,40 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
         {
             logger.LogError(e.Message);
             return NotFound("Retrieving party failed.");
+        }
+    }
+
+    [HttpPost("RequestSong")]
+    public async Task<ActionResult> RequestSong([Required] string title, [Required] Guid partyId)
+    {
+        try
+        {
+            var song = new Song() { Title = title, RequestTime = DateTime.Now, Accepted = false };
+            
+            partyRepository.RequestSong(song, partyId);
+
+            return Ok("Successfully requested song.");
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e.Message);
+            return NotFound("Requesting song failed.");
+        }
+    }
+
+    [HttpPatch("AcceptSong"), Authorize(Roles = "Host")]
+    public async Task<ActionResult> AcceptSong([Required] int songId, [Required] bool accept)
+    {
+        try
+        {
+            partyRepository.AcceptSong(songId, accept);
+
+            return accept ? Ok("Song accepted by host.") : Ok("Song denied by host.");
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e.Message);
+            return NotFound("Accepting song failed.");
         }
     }
 }
