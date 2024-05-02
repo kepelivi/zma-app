@@ -48,6 +48,18 @@ public class PartyRepository : IPartyRepository
         return party;
     }
 
+    public ICollection<Party> GetParties()
+    {
+        var parties = _dbContext.Parties.ToList();
+
+        if (parties.Count == 0)
+        {
+            throw new Exception("No parties found.");
+        }
+        
+        return _dbContext.Parties.ToList();
+    }
+
     public void RequestSong(Song song, Guid partyId)
     {
         var party = _dbContext.Parties.FirstOrDefault(p => p.Id == partyId);

@@ -52,6 +52,20 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
         }
     }
 
+    [HttpGet("GetParties"), Authorize(Roles = "Host")]
+    public async Task<ActionResult<ICollection<Party>>> GetParties()
+    {
+        try
+        {
+            return Ok(partyRepository.GetParties());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e.Message);
+            return NotFound("Retrieving parties failed.");
+        }
+    }
+
     [HttpPost("RequestSong")]
     public async Task<ActionResult> RequestSong([Required] string title, [Required] Guid partyId)
     {
