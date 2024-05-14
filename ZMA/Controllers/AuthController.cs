@@ -19,13 +19,13 @@ public class AuthController(IAuthService authenticationService, ILogger logger) 
         var result = await authenticationService.RegisterAsync(request.Email, request.Username, request.Name, request.Password, _config["HostRole"] != null
             ? _config["HostRole"] : Environment.GetEnvironmentVariable("HOSTROLE"));
         
-        logger.LogInfo($"New host registered at {DateTime.Now.ToShortDateString()} - email: {result.Email}, username: {result.UserName}");
-        
         if (!result.Success)
         {
             AddErrors(result);
             return BadRequest(ModelState);
         }
+        
+        logger.LogInfo($"New host registered at {DateTime.Now.ToShortDateString()} - email: {result.Email}, username: {result.UserName}");
 
         return CreatedAtAction(nameof(RegisterHost), new RegistrationRes(result.Email, result.UserName));
     }
@@ -40,20 +40,19 @@ public class AuthController(IAuthService authenticationService, ILogger logger) 
 
         var result = await authenticationService.LoginAsync(request.Email, request.Password);
         
-        logger.LogInfo($"Host logged in - email: {result.Email}, username: {result.UserName}");
-
         if (!result.Success)
         {
             AddErrors(result);
             return BadRequest(ModelState);
         }
         
+        logger.LogInfo($"Host logged in - email: {result.Email}, username: {result.UserName}");
+        
         Response.Cookies.Append("Host", result.Token, new CookieOptions() { HttpOnly = false, SameSite = SameSiteMode.Strict });
 
         return Ok();
     }
     
-    //[Authorize(Roles = "Customer, Company, Admin")]
     [HttpPost("Logout")]
     public IActionResult Logout()
     {
