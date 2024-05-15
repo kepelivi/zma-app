@@ -1,1 +1,3 @@
-export const port = process.env.PORT;
+import Config from 'react-native-config';
+
+export const port = Config.PORT;
