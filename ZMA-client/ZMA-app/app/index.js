@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { useState, useEffect } from 'react';
 import { Link } from 'expo-router';
-//import { port } from '../constants/config';
 
 //constants
 import {COLORS} from '../constants/theme';
@@ -10,7 +9,7 @@ import {COLORS} from '../constants/theme';
 //components
 import Login from '../components/login';
 import Logo from '../components/logo';
-
+import Camera from '../components/camera';
 
 export default function Home() {
   const port = '';
@@ -19,6 +18,9 @@ export default function Home() {
       <Logo />
       <StatusBar style="auto" />
       <Login port={port}/>
+      <Text>Vendég vagy?</Text>
+      <Text>Scanneld be a QR kódot!</Text>
+      <Camera />
     </View>
   );
 }
