@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, FlatList, SafeAreaView, Pressable } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useNavigation } from "expo-router";
 
@@ -39,6 +39,9 @@ export default function PartyManager() {
             <View style={styles.header}>
                 <Text style={styles.main}>Bulik</Text>
             </View>
+            <Pressable style={[styles.button, { backgroundColor: '#9c27b0' }]}>
+                <Text style={styles.buttonText}>Buli létrehozás</Text>
+            </Pressable>
             <FlatList
                 data={parties}
                 renderItem={({ item }) => <PartyCard party={item} onPress={() => navigation.navigate('songRequests', { id: item.id } )} />}
@@ -66,5 +69,18 @@ const styles = StyleSheet.create({
     },
     listContent: {
       padding: 16,
+    },
+    button: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 8,
+        elevation: 2,
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
     },
   });
