@@ -50,7 +50,7 @@ public class PartyRepository : IPartyRepository
 
     public ICollection<Party> GetParties()
     {
-        var parties = _dbContext.Parties.ToList();
+        var parties = _dbContext.Parties.Include(party => party.Queue).ToList();
 
         if (parties.Count == 0)
         {
@@ -91,5 +91,24 @@ public class PartyRepository : IPartyRepository
         
         song.Accepted = accept;
         _dbContext.SaveChanges();
+    }
+
+    public ICollection<Song> GetSongs(Guid partyId)
+    {
+        var party = _dbContext.Parties.Include(party => party.Queue).Single(p => p.Id == partyId);
+
+        if (party == null)
+        {
+            throw new Exception("Party doesn't exist");
+        }
+
+        var songs = party.Queue;
+
+        if (songs == null)
+        {
+            throw new Exception("Queue is empty");
+        }
+
+        return songs.ToList();
     }
 }

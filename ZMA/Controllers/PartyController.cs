@@ -99,4 +99,18 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
             return NotFound("Accepting song failed.");
         }
     }
+
+    [HttpGet("GetSongs"), Authorize(Roles = "Host")]
+    public async Task<ActionResult<ICollection<Song>>> GetSongs([Required] Guid partyId)
+    {
+        try
+        {
+            return Ok(partyRepository.GetSongs(partyId));
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e.Message);
+            return NotFound("Retrieving songs failed.");
+        }
+    }
 }

@@ -9,4 +9,5 @@ public interface IPartyRepository
     ICollection<Party> GetParties();
     void RequestSong(Song song, Guid partyId);
     void AcceptSong(int songId, bool accept);
+    ICollection<Song> GetSongs(Guid partyId);
 }
