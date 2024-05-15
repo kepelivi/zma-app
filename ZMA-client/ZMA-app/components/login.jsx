@@ -4,11 +4,10 @@ import {
     View,
     SafeAreaView,
     StyleSheet,
-    Alert,
     Pressable
 } from "react-native";
 import { useState } from "react";
-import { Link, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import { notification } from "antd";
 
 notification.config({
@@ -21,8 +20,8 @@ import { COLORS } from "../constants/theme";
 const Login = ({ port }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigation = useNavigation();
     const [showPassword, setShowPassword] = useState(false);
+    const navigation = useNavigation();
 
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
