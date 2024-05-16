@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import SongCard from '../components/songCard';
 import Logo from '../components/logo';
 import { COLORS } from '../constants/theme';
+import Loading from '../components/loading';
 
 export default function songRequests() {
     const [songs, setSongs] = useState([]);
@@ -31,7 +32,7 @@ export default function songRequests() {
         })
     }, []);
 
-    if (loading) return <View><Text>Loading...</Text></View>
+    if (loading) return <Loading />
 
     return (
         <SafeAreaView style={styles.safeArea}>
