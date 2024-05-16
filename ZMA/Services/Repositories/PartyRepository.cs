@@ -38,7 +38,7 @@ public class PartyRepository : IPartyRepository
 
     public Party GetParty(Guid id)
     {
-        var party = _dbContext.Parties.Find(id);
+        var party = _dbContext.Parties.Include(p => p.Queue).Single(p => p.Id == id);
 
         if (party == null)
         {
@@ -73,7 +73,7 @@ public class PartyRepository : IPartyRepository
         _dbContext.SaveChanges();
     }
 
-    public void AcceptSong(int songId, bool accept)
+    public void AcceptSong(int songId)
     {
         var party = _dbContext.Parties.Include(party => party.Queue).FirstOrDefault(p => p.Queue.Any(s => s.Id == songId));
 
@@ -89,7 +89,7 @@ public class PartyRepository : IPartyRepository
             throw new Exception("Song not found.");
         }
         
-        song.Accepted = accept;
+        song.Accepted = true;
         _dbContext.SaveChanges();
     }
 
@@ -110,5 +110,41 @@ public class PartyRepository : IPartyRepository
         }
 
         return songs.ToList();
+    }
+
+    public void DeleteParty(Party party)
+    {
+        _dbContext.Parties.Remove(party);
+        _dbContext.SaveChanges();
+    }
+
+    public void UpdateParty(Guid partyId, string name, string details, string category, DateTime date)
+    {
+        var partyToUpdate = _dbContext.Parties.Single(p => p.Id == partyId);
+
+        if (partyToUpdate == null)
+        {
+            throw new Exception("Party doesn't exist");
+        }
+
+        partyToUpdate.Name = name;
+        partyToUpdate.Details = details;
+        partyToUpdate.Category = category;
+        partyToUpdate.Date = date;
+
+        _dbContext.SaveChanges();
+    }
+
+    public void DeleteSong(Guid partyId, int songId)
+    {
+        var party = _dbContext.Parties.Include(party => party.Queue).Single(p => p.Id == partyId);
+
+        var songToDelete = party.Queue.Single(song => song.Id == songId);
+
+        party.Queue.Remove(songToDelete);
+
+        _dbContext.Entry(songToDelete).State = EntityState.Deleted;
+
+        _dbContext.SaveChanges();
     }
 }
