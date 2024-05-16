@@ -4,8 +4,8 @@ import { useNavigation } from "expo-router";
 
 import { COLORS } from '../constants/theme';
 import PartyCard from '../components/partyCard';
-
 import Logo from '../components/logo';
+import Loading from '../components/loading';
 
 export default function PartyManager() {
     const [parties, setParties] = useState([]);
@@ -23,6 +23,18 @@ export default function PartyManager() {
         return await res.json();
     }
 
+    async function onDelete(id) {
+        await fetch(`http://localhost:5086/Party/DeleteParty?partyId=${id}`,
+            {
+                method: "DELETE",
+                credentials: 'include',
+                headers: { 'Content-type': 'application/json' }
+            }
+        );
+        fetchParties()
+            .then(parties => setParties(parties));
+    }
+
     useEffect(() => {
         fetchParties()
             .then(parties => {
@@ -31,7 +43,7 @@ export default function PartyManager() {
             })
     }, []);
 
-    if (loading) return <View><Text>Loading...</Text></View>
+    if (loading) return <Loading />
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -39,12 +51,14 @@ export default function PartyManager() {
             <View style={styles.header}>
                 <Text style={styles.main}>Bulik</Text>
             </View>
-            <Pressable style={[styles.button, { backgroundColor: '#9c27b0' }]}>
-                <Text style={styles.buttonText}>Buli létrehozás</Text>
-            </Pressable>
+            <View style={styles.container}>
+                <Pressable onPress={() => navigation.navigate('createParty')} style={[styles.button, { backgroundColor: '#9c27b0' }]}>
+                    <Text style={styles.buttonText}>Buli létrehozás</Text>
+                </Pressable>
+            </View>
             <FlatList
                 data={parties}
-                renderItem={({ item }) => <PartyCard party={item} onPress={() => navigation.navigate('songRequests', { id: item.id } )} />}
+                renderItem={({ item }) => <PartyCard party={item} onPress={() => navigation.navigate('songRequests', { id: item.id })} onDelete={() => onDelete(item.id)} />}
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.listContent}
             />
@@ -54,27 +68,32 @@ export default function PartyManager() {
 
 const styles = StyleSheet.create({
     safeArea: {
-      flex: 1,
-      backgroundColor: '#fff',
+        flex: 1,
+        backgroundColor: '#fff',
     },
     header: {
-      padding: 16,
-      backgroundColor: COLORS.deepPurple,
-      alignItems: 'center',
+        padding: 16,
+        backgroundColor: COLORS.deepPurple,
+        alignItems: 'center',
     },
     main: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: '#fff',
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#fff',
     },
     listContent: {
-      padding: 16,
+        padding: 16,
+    },
+    buttonContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     button: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 24,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
         borderRadius: 8,
         elevation: 2,
     },
@@ -83,4 +102,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#FFFFFF',
     },
-  });
+});

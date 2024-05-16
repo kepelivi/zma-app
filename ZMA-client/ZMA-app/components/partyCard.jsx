@@ -15,7 +15,7 @@ export default function PartyCard({ party, onDelete, onPress }) {
                 styles.deleteButton,
                 { backgroundColor: pressed ? '#7c1d82' : '#9c27b0' }
             ]}>
-                <Text style={styles.deleteButtonText}>Delete</Text>
+                <Text style={styles.deleteButtonText}>Törlés</Text>
             </Pressable>
         </View>
     )
