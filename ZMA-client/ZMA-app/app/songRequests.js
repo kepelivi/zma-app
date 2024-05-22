@@ -24,12 +24,24 @@ export default function songRequests() {
         return await res.json();
     }
 
-    useEffect(() => {
-        fetchSongs()
-        .then(songs => {
-            setSongs(songs);
+    async function fetchAndSortSongs() {
+        try {
+            const songs = await fetchSongs();
+
+            const sortedSongs = songs.sort((a, b) => {
+                return new Date(b.requestTime) - new Date(a.requestTime);
+            });
+
+            setSongs(sortedSongs);
+        } catch (error) {
+            console.error('Failed to fetch and sort songs', error);
+        } finally {
             setLoading(false);
-        })
+        }
+    }
+
+    useEffect(() => {
+        fetchAndSortSongs();
     }, []);
 
     if (loading) return <Loading />
@@ -52,20 +64,20 @@ export default function songRequests() {
 
 const styles = StyleSheet.create({
     safeArea: {
-      flex: 1,
-      backgroundColor: '#fff',
+        flex: 1,
+        backgroundColor: '#fff',
     },
     header: {
-      padding: 16,
-      backgroundColor: COLORS.deepPurple,
-      alignItems: 'center',
+        padding: 16,
+        backgroundColor: COLORS.deepPurple,
+        alignItems: 'center',
     },
     main: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: '#fff',
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#fff',
     },
     listContent: {
-      padding: 16,
+        padding: 16,
     },
-  });
+});

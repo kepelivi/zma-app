@@ -31,16 +31,23 @@ export default function PartyManager() {
                 headers: { 'Content-type': 'application/json' }
             }
         );
-        fetchParties()
-            .then(parties => setParties(parties));
+        fetchAndSortParties();
     }
 
+    async function fetchAndSortParties() {
+        try {
+            const parties = await fetchParties();
+            const sortedParties = parties.sort((a, b) => new Date(a.date) - new Date(b.date));
+            setParties(sortedParties);
+        } catch (error) {
+            console.error('Failed to fetch and sort parties', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        fetchParties()
-            .then(parties => {
-                setParties(parties);
-                setLoading(false);
-            })
+        fetchAndSortParties();
     }, []);
 
     if (loading) return <Loading />
