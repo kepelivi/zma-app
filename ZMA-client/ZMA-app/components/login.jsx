@@ -28,6 +28,7 @@ const Login = ({ port }) => {
     };
 
     async function handleLogin() {
+        styles.button.backgroundColor = "black";
         try {
             const res = await fetch(`http://localhost:5086/Auth/Login`, {
                 method: 'POST',
@@ -79,7 +80,7 @@ const Login = ({ port }) => {
                         </Pressable>
                     </View>
                 </View>
-                <Pressable style={styles.button} onPress={() => handleLogin()}>
+                <Pressable style={styles.button} onPress={handleLogin}>
                     <Text style={styles.buttonText}>Belépés</Text>
                 </Pressable>
             </View>
@@ -112,6 +113,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 5,
+        zIndex: 1000,
     },
     buttonText: {
         color: 'white',

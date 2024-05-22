@@ -94,7 +94,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 8,
         paddingHorizontal: 16,
-        borderRadius: 8,
         elevation: 2,
     },
     buttonText: {
