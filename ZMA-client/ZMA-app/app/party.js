@@ -6,6 +6,7 @@ import { COLORS } from '../constants/theme';
 import PartyCard from '../components/partyCard';
 import Logo from '../components/logo';
 import Loading from '../components/loading';
+import LogOut from '../components/logout';
 
 export default function PartyManager() {
     const [parties, setParties] = useState([]);
@@ -54,6 +55,7 @@ export default function PartyManager() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            <LogOut />
             <Logo />
             <View style={styles.header}>
                 <Text style={styles.main}>Bulik</Text>

@@ -15,9 +15,9 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: '10%',
-        paddingBottom: '5%',
-        backgroundColor: 'white',
+        height: 100,
+        width: '50%',
+        margin: 'auto',
     },
     main: {
         fontSize: 40,
