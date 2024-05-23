@@ -6,6 +6,7 @@ import { notification } from "antd";
 import DateSetter from "../components/datePicker";
 import { COLORS } from "../constants/theme";
 import Logo from "../components/logo";
+import GoBack from "../components/back";
 
 notification.config({
     duration: 2,
@@ -35,6 +36,7 @@ export default function createParty() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
+            <GoBack />
             <Logo />
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
