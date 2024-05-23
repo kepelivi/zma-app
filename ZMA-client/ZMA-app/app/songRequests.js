@@ -6,6 +6,7 @@ import SongCard from '../components/songCard';
 import Logo from '../components/logo';
 import { COLORS } from '../constants/theme';
 import Loading from '../components/loading';
+import GoBack from '../components/back';
 
 export default function songRequests() {
     const [songs, setSongs] = useState([]);
@@ -48,6 +49,7 @@ export default function songRequests() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            <GoBack />
             <Logo />
             <View style={styles.header}>
                 <Text style={styles.main}>Kért zenék</Text>
