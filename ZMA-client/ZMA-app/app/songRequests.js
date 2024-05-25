@@ -25,6 +25,42 @@ export default function songRequests() {
         return await res.json();
     }
 
+    async function handleAccept(songId) {
+        try {
+            const res = await fetch(`http://localhost:5086/Party/AcceptSong?songId=${songId}`,
+                {
+                    method: "PATCH",
+                    credentials: 'include',
+                    headers: { 'Content-type': 'application/json' }
+                });
+            if (!res.ok) {
+                throw new Error("Something went wrong");
+            }
+            fetchAndSortSongs();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function handleDeny(songId) {
+        try {
+            const res = await fetch(`http://localhost:5086/Party/DenySong?partyId=${params.id}&songId=${songId}`,
+                {
+                    method: "DELETE",
+                    credentials: 'include',
+                    headers: { 'Content-type': 'application/json' }
+                });
+            if (!res.ok) {
+                throw new Error("Something went wrong");
+            }
+            fetchAndSortSongs();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     async function fetchAndSortSongs() {
         try {
             const songs = await fetchSongs();
@@ -56,7 +92,7 @@ export default function songRequests() {
             </View>
             <FlatList
                 data={songs}
-                renderItem={({ item }) => <SongCard song={item} />}
+                renderItem={({ item }) => <SongCard song={item} onAccept={() => handleAccept(item.id)} onDeny={() => handleDeny(item.id)} />}
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.listContent}
             />
