@@ -1,8 +1,10 @@
 import { Text, View, Pressable, StyleSheet } from "react-native";
 
+import { COLORS } from "../constants/theme";
+
 export default function SongCard({ song, onAccept, onDeny }) {
     return (
-        <View style={styles.card}>
+        <View style={[styles.card, song.accepted && styles.acceptedCard]}>
             <View style={styles.cardContent}>
                 <Text style={styles.title}>{song.title}</Text>
                 <Text style={styles.time}>{song.requestTime.split("T").shift()} - {song.requestTime.split("T").pop().split('.').shift()}</Text>
@@ -26,6 +28,9 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 16,
         elevation: 2,
+    },
+    acceptedCard: {
+        backgroundColor: COLORS.greyish,
     },
     cardContent: {
         marginBottom: 16,
