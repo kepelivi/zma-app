@@ -182,3 +182,5 @@ void AddIdentity()
         .AddEntityFrameworkStores<ZMAContext>();
     
 }
+
+public partial class Program { }
