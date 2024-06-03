@@ -23,7 +23,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
 
             var party = new Party {Name = name, Host = host, Date = date, Details = details, Category = category};
             
-            partyRepository.CreateParty(party);
+            await partyRepository.CreateParty(party);
 
             logger.LogInfo($"New party {party.Name} created at {DateTime.Now.ToShortDateString()} for the date of {party.Date}");
             
@@ -41,7 +41,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            var party = partyRepository.GetParty(id);
+            var party = await partyRepository.GetParty(id);
 
             return Ok(party);
         }
@@ -57,7 +57,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            return Ok(partyRepository.GetParties());
+            return Ok(await partyRepository.GetParties());
         }
         catch (Exception e)
         {
@@ -73,7 +73,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
         {
             var song = new Song() { Title = title, RequestTime = DateTime.Now, Accepted = false };
             
-            partyRepository.RequestSong(song, partyId);
+           await partyRepository.RequestSong(song, partyId);
 
             return Ok("Successfully requested song.");
         }
@@ -89,7 +89,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            partyRepository.AcceptSong(songId);
+            await partyRepository.AcceptSong(songId);
 
             return Ok("Song accepted by host.");
         }
@@ -105,7 +105,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            return Ok(partyRepository.GetSongs(partyId));
+            return Ok(await partyRepository.GetSongs(partyId));
         }
         catch (Exception e)
         {
@@ -119,7 +119,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            partyRepository.DeleteSong(partyId, songId);
+            await partyRepository.DeleteSong(partyId, songId);
             
             logger.LogInfo("Host deleted song.");
 
@@ -137,9 +137,9 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            var party = partyRepository.GetParty(partyId);
+            var party = await partyRepository.GetParty(partyId);
             
-            partyRepository.DeleteParty(party);
+            await partyRepository.DeleteParty(party);
             
             logger.LogInfo($"Party deleted - Name: {party.Name}, Date: {party.Date}");
 
@@ -158,7 +158,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            partyRepository.UpdateParty(partyId, name, details, category, date);
+            await partyRepository.UpdateParty(partyId, name, details, category, date);
             
             logger.LogInfo($"Party updated - Id: {partyId}");
 

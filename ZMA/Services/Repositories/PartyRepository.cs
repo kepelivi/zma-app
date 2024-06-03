@@ -20,23 +20,8 @@ public class PartyRepository : IPartyRepository
         _optionsBuilder.UseSqlServer(_config["ConnectionString"]);
         _dbContext = context;
     }
-    
-    public void CreateParty(Party party)
-    {
-        var host = _dbContext.Users.FirstOrDefault(h => party.Host != null && h.Id == party.Host.Id);
 
-        if (host == null)
-        {
-            throw new Exception("Host not found for creating a party.");
-        }
-
-        var createdParty = new Party { Name = party.Name, Host = host, Date = party.Date, Category = party.Category, Details = party.Details};
-
-        _dbContext.Parties.Add(createdParty);
-        _dbContext.SaveChanges();
-    }
-
-    public async Task<Party> CreatePartyAsync(Party party)
+    public async Task<Party> CreateParty(Party party)
     {
         var host = await _dbContext.Users.FirstOrDefaultAsync(h => party.Host != null && h.Id == party.Host.Id);
 
@@ -51,20 +36,8 @@ public class PartyRepository : IPartyRepository
         await _dbContext.SaveChangesAsync();
         return createdParty;
     }
-
-    public Party GetParty(Guid id)
-    {
-        var party = _dbContext.Parties.Single(p => p.Id == id);
-
-        if (party == null)
-        {
-            throw new Exception("Party not found.");
-        }
-
-        return party;
-    }
     
-    public async Task<Party> GetPartyAsync(Guid id)
+    public async Task<Party> GetParty(Guid id)
     {
         var party = await _dbContext.Parties.SingleAsync(p => p.Id == id);
 
@@ -76,32 +49,19 @@ public class PartyRepository : IPartyRepository
         return party;
     }
 
-    public ICollection<Party> GetParties()
+    public async Task<ICollection<Party>> GetParties()
     {
-        var parties = _dbContext.Parties.Include(party => party.Queue).ToList();
+        var parties = await _dbContext.Parties.Include(party => party.Queue).ToListAsync();
 
         if (parties.Count == 0)
         {
             throw new Exception("No parties found.");
         }
         
-        return _dbContext.Parties.ToList();
-    }
-
-    public void RequestSong(Song song, Guid partyId)
-    {
-        var party = _dbContext.Parties.Include(p => p.Queue).FirstOrDefault(p => p.Id == partyId);
-
-        if (party == null)
-        {
-            throw new Exception("Party not found.");
-        }
-        
-        party.Queue.Add(song);
-        _dbContext.SaveChanges();
+        return parties;
     }
     
-    public async Task<Song> RequestSongAsync(Song song, Guid partyId)
+    public async Task<Song> RequestSong(Song song, Guid partyId)
     {
         var party = await _dbContext.Parties.Include(p => p.Queue).FirstOrDefaultAsync(p => p.Id == partyId);
 
@@ -115,9 +75,9 @@ public class PartyRepository : IPartyRepository
         return song;
     }
 
-    public void AcceptSong(int songId)
+    public async Task AcceptSong(int songId)
     {
-        var party = _dbContext.Parties.Include(party => party.Queue).FirstOrDefault(p => p.Queue.Any(s => s.Id == songId));
+        var party = await _dbContext.Parties.Include(party => party.Queue).FirstOrDefaultAsync(p => p.Queue.Any(s => s.Id == songId));
 
         if (party == null)
         {
@@ -134,27 +94,8 @@ public class PartyRepository : IPartyRepository
         song.Accepted = true;
         _dbContext.SaveChanges();
     }
-
-    public ICollection<Song> GetSongs(Guid partyId)
-    {
-        var party = _dbContext.Parties.Include(party => party.Queue).Single(p => p.Id == partyId);
-
-        if (party == null)
-        {
-            throw new Exception("Party doesn't exist");
-        }
-
-        var songs = party.Queue;
-
-        if (songs == null)
-        {
-            throw new Exception("Queue is empty");
-        }
-
-        return songs.ToList();
-    }
     
-    public async Task<ICollection<Song>> GetSongsAsync(Guid partyId)
+    public async Task<ICollection<Song>> GetSongs(Guid partyId)
     {
         var party = await _dbContext.Parties.Include(party => party.Queue).SingleAsync(p => p.Id == partyId);
 
@@ -173,15 +114,15 @@ public class PartyRepository : IPartyRepository
         return songs.ToList();
     }
 
-    public void DeleteParty(Party party)
+    public async Task DeleteParty(Party party)
     {
         _dbContext.Parties.Remove(party);
-        _dbContext.SaveChanges();
+        _dbContext.SaveChangesAsync();
     }
 
-    public void UpdateParty(Guid partyId, string name, string details, string category, DateTime date)
+    public async Task UpdateParty(Guid partyId, string name, string details, string category, DateTime date)
     {
-        var partyToUpdate = _dbContext.Parties.Single(p => p.Id == partyId);
+        var partyToUpdate = await _dbContext.Parties.SingleAsync(p => p.Id == partyId);
 
         if (partyToUpdate == null)
         {
@@ -193,12 +134,12 @@ public class PartyRepository : IPartyRepository
         partyToUpdate.Category = category;
         partyToUpdate.Date = date;
 
-        _dbContext.SaveChanges();
+        _dbContext.SaveChangesAsync();
     }
 
-    public void DeleteSong(Guid partyId, int songId)
+    public async Task DeleteSong(Guid partyId, int songId)
     {
-        var party = _dbContext.Parties.Include(party => party.Queue).Single(p => p.Id == partyId);
+        var party = await _dbContext.Parties.Include(party => party.Queue).SingleAsync(p => p.Id == partyId);
 
         var songToDelete = party.Queue.Single(song => song.Id == songId);
 
@@ -206,6 +147,6 @@ public class PartyRepository : IPartyRepository
 
         _dbContext.Entry(songToDelete).State = EntityState.Deleted;
 
-        _dbContext.SaveChanges();
+        _dbContext.SaveChangesAsync();
     }
 }

@@ -20,12 +20,12 @@ public class PartyRepositoryTest : IClassFixture<DatabaseFixture>
     }
 
     [Fact]
-    public void GetParties_ReturnsAllParties()
+    public async Task GetParties_ReturnsAllParties()
     {
-        var result = _partyRepository.GetParties().ToList();
+        var result = await _partyRepository.GetParties();
         
         Assert.Equal(2, result.Count);
-        Assert.Equal("test", result[0].Category);
+        Assert.Equal("test", result.ToList()[0].Category);
     }
 
     [Fact]
@@ -34,15 +34,15 @@ public class PartyRepositoryTest : IClassFixture<DatabaseFixture>
         var party = new Party()
             { Category = "test1", Date = DateTime.Now, Details = "test", Name = "test1", Host = _fixture.TestHost };
         
-        var result = await _partyRepository.CreatePartyAsync(party);
+        var result = await _partyRepository.CreateParty(party);
         
         Assert.Equal("test1", result.Name);
     }
 
     [Fact]
-    public void GetParty_ReturnsCorrectPartyBasedOnId()
+    public async Task GetParty_ReturnsCorrectPartyBasedOnId()
     {
-        var result = _partyRepository.GetParty(_fixture.TestId);
+        var result = await _partyRepository.GetParty(_fixture.TestId);
         
         Assert.Equal(_fixture.TestId, result.Id);
     }
@@ -50,10 +50,43 @@ public class PartyRepositoryTest : IClassFixture<DatabaseFixture>
     [Fact]
     public async Task RequestSong_AddsSongToDatabase()
     {
-        var song = new Song() { Id = 1, Accepted = false, RequestTime = DateTime.Now };
+        var song = new Song() { Id = 2, Title = "test2", Accepted = false, RequestTime = DateTime.Now };
 
-        var result = await _partyRepository.RequestSongAsync(song, _fixture.TestId);
+        var result = await _partyRepository.RequestSong(song, _fixture.TestId);
         
         Assert.Equal(song.Id, result.Id);
+    }
+
+    [Fact]
+    public async Task UpdateParty_SuccessfullyUpdatesPartyEntity()
+    {
+        var result = _partyRepository.UpdateParty(_fixture.TestId, "testt", "test", "test", DateTime.Now);
+        
+        Assert.Equal(true, result.IsCompletedSuccessfully);
+    }
+
+    [Fact]
+    public async Task DeleteParty_SuccessfullyDeletesPartyEntity()
+    {
+        var party = new Party() { Category = "test2", Date = DateTime.Now, Details = "test", Name = "test1", Host = _fixture.TestHost };
+        var createdParty = await _partyRepository.CreateParty(party);
+
+        var result = _partyRepository.DeleteParty(createdParty);
+        
+        Assert.Equal(true, result.IsCompletedSuccessfully);
+    }
+
+    [Fact]
+    public async Task GetSongs_ReturnsAllSongs()
+    {
+        var result = await _partyRepository.GetSongs(_fixture.TestId);
+        
+        Assert.Equal(1, result.ToList().Count);
+    }
+
+    [Fact]
+    public async Task DeleteSong_SuccessfullyDeletesSongEntity()
+    {
+        
     }
 }
