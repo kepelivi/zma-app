@@ -69,22 +69,15 @@ public class PartyRepository : IPartyRepository
         {
             throw new Exception("Party not found.");
         }
-        
-        party.Queue.Add(song);
+
+        await _dbContext.Songs.AddAsync(song);
         await _dbContext.SaveChangesAsync();
         return song;
     }
 
     public async Task AcceptSong(int songId)
     {
-        var party = await _dbContext.Parties.Include(party => party.Queue).FirstOrDefaultAsync(p => p.Queue.Any(s => s.Id == songId));
-
-        if (party == null)
-        {
-            throw new Exception("Party not found.");
-        }
-        
-        var song = party?.Queue.FirstOrDefault(s => s.Id == songId);
+        var song = await _dbContext.Songs.SingleAsync(s => s.Id == songId);
 
         if (song == null)
         {
@@ -92,7 +85,7 @@ public class PartyRepository : IPartyRepository
         }
         
         song.Accepted = true;
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
     
     public async Task<ICollection<Song>> GetSongs(Guid partyId)
@@ -104,20 +97,20 @@ public class PartyRepository : IPartyRepository
             throw new Exception("Party doesn't exist");
         }
 
-        var songs = party.Queue;
+        var songs = await _dbContext.Songs.ToListAsync();
 
         if (songs == null)
         {
             throw new Exception("Queue is empty");
         }
 
-        return songs.ToList();
+        return songs;
     }
 
     public async Task DeleteParty(Party party)
     {
         _dbContext.Parties.Remove(party);
-        _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateParty(Guid partyId, string name, string details, string category, DateTime date)
@@ -134,19 +127,19 @@ public class PartyRepository : IPartyRepository
         partyToUpdate.Category = category;
         partyToUpdate.Date = date;
 
-        _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task DeleteSong(Guid partyId, int songId)
     {
         var party = await _dbContext.Parties.Include(party => party.Queue).SingleAsync(p => p.Id == partyId);
 
-        var songToDelete = party.Queue.Single(song => song.Id == songId);
+        var songToDelete = await _dbContext.Songs.SingleAsync(s => s.Id == songId);
 
         party.Queue.Remove(songToDelete);
 
         _dbContext.Entry(songToDelete).State = EntityState.Deleted;
 
-        _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 }

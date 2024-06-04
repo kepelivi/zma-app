@@ -9,6 +9,7 @@ namespace ZMA.Data;
 public class ZMAContext : IdentityDbContext<Host, IdentityRole, string>
 {
     public DbSet<Party> Parties { get; set; }
+    public DbSet<Song> Songs { get; set; }
 
     public ZMAContext()
     {
@@ -23,14 +24,13 @@ public class ZMAContext : IdentityDbContext<Host, IdentityRole, string>
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<Party>().Property(p => p.Details).IsRequired(false);
-
         builder.Entity<Party>()
             .HasOne(p => p.Host)
             .WithMany();
 
         builder.Entity<Party>()
             .HasMany(p => p.Queue)
-            .WithOne();
+            .WithOne()
+            .HasForeignKey(s => s.PartyId);
     }
 }
