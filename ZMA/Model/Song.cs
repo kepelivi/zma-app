@@ -6,4 +6,5 @@ public class Song
     public string? Title { get; init; }
     public DateTime RequestTime { get; init; }
     public bool Accepted { get; set; }
+    public Guid PartyId { get; set; }
 }

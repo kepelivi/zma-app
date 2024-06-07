@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZMA", "ZMA\ZMA.csproj", "{D82FB40C-C304-4E9E-B23C-5EF11205556D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZMATest", "ZMATest\ZMATest.csproj", "{84C5F12A-E3C4-4B96-9134-976DF4C6A1FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZMAIntegrationTest", "ZMAIntegrationTest\ZMAIntegrationTest.csproj", "{D167851F-3EA9-4F76-92AB-E0899DCF7AC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{D82FB40C-C304-4E9E-B23C-5EF11205556D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D82FB40C-C304-4E9E-B23C-5EF11205556D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D82FB40C-C304-4E9E-B23C-5EF11205556D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C5F12A-E3C4-4B96-9134-976DF4C6A1FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C5F12A-E3C4-4B96-9134-976DF4C6A1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C5F12A-E3C4-4B96-9134-976DF4C6A1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C5F12A-E3C4-4B96-9134-976DF4C6A1FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D167851F-3EA9-4F76-92AB-E0899DCF7AC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D167851F-3EA9-4F76-92AB-E0899DCF7AC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D167851F-3EA9-4F76-92AB-E0899DCF7AC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D167851F-3EA9-4F76-92AB-E0899DCF7AC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

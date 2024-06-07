@@ -23,7 +23,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
 
             var party = new Party {Name = name, Host = host, Date = date, Details = details, Category = category};
             
-            partyRepository.CreateParty(party);
+            await partyRepository.CreateParty(party);
 
             logger.LogInfo($"New party {party.Name} created at {DateTime.Now.ToShortDateString()} for the date of {party.Date}");
             
@@ -41,7 +41,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            var party = partyRepository.GetParty(id);
+            var party = await partyRepository.GetParty(id);
 
             return Ok(party);
         }
@@ -57,7 +57,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            return Ok(partyRepository.GetParties());
+            return Ok(await partyRepository.GetParties());
         }
         catch (Exception e)
         {
@@ -66,80 +66,14 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
         }
     }
 
-    [HttpPost("RequestSong")]
-    public async Task<ActionResult> RequestSong([Required] string title, [Required] Guid partyId)
-    {
-        try
-        {
-            var song = new Song() { Title = title, RequestTime = DateTime.Now, Accepted = false };
-            
-            partyRepository.RequestSong(song, partyId);
-
-            return Ok("Successfully requested song.");
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e.Message);
-            return NotFound("Requesting song failed.");
-        }
-    }
-
-    [HttpPatch("AcceptSong"), Authorize(Roles = "Host")]
-    public async Task<ActionResult> AcceptSong([Required] int songId)
-    {
-        try
-        {
-            partyRepository.AcceptSong(songId);
-
-            return Ok("Song accepted by host.");
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e.Message);
-            return NotFound("Accepting song failed.");
-        }
-    }
-
-    [HttpGet("GetSongs"), Authorize(Roles = "Host")]
-    public async Task<ActionResult<ICollection<Song>>> GetSongs([Required] Guid partyId)
-    {
-        try
-        {
-            return Ok(partyRepository.GetSongs(partyId));
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e.Message);
-            return NotFound("Retrieving songs failed.");
-        }
-    }
-
-    [HttpDelete("DenySong"), Authorize(Roles = "Host")]
-    public async Task<ActionResult> DenySong([Required] Guid partyId, [Required] int songId)
-    {
-        try
-        {
-            partyRepository.DeleteSong(partyId, songId);
-            
-            logger.LogInfo("Host deleted song.");
-
-            return Ok("Song denied");
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e.Message);
-            return NotFound("Deleting song failed.");
-        }
-    }
-
     [HttpDelete("DeleteParty"), Authorize(Roles = "Host")]
     public async Task<ActionResult> DeleteParty([Required] Guid partyId)
     {
         try
         {
-            var party = partyRepository.GetParty(partyId);
+            var party = await partyRepository.GetParty(partyId);
             
-            partyRepository.DeleteParty(party);
+            await partyRepository.DeleteParty(party);
             
             logger.LogInfo($"Party deleted - Name: {party.Name}, Date: {party.Date}");
 
@@ -158,7 +92,7 @@ public class PartyController(IPartyRepository partyRepository, UserManager<Host>
     {
         try
         {
-            partyRepository.UpdateParty(partyId, name, details, category, date);
+            await partyRepository.UpdateParty(partyId, name, details, category, date);
             
             logger.LogInfo($"Party updated - Id: {partyId}");
 
