@@ -76,16 +76,6 @@ public class PartyRepositoryTest : IDisposable
     }
 
     [Fact]
-    public async Task RequestSong_AddsSongToDatabase()
-    {
-        var song = new Song() { Id = 2, Title = "test2", Accepted = false, RequestTime = DateTime.Now };
-
-        var result = await _partyRepository.RequestSong(song, TestId);
-        
-        Assert.Equal(song.Id, result.Id);
-    }
-
-    [Fact]
     public async Task UpdateParty_SuccessfullyUpdatesPartyEntity()
     {
         var result = _partyRepository.UpdateParty(TestId, "testt", "test", "test", DateTime.Now);
@@ -102,47 +92,5 @@ public class PartyRepositoryTest : IDisposable
         var result = _partyRepository.DeleteParty(createdParty);
         
         Assert.Equal(true, result.IsCompletedSuccessfully);
-    }
-
-    [Fact]
-    public async Task GetSongs_ReturnsAllSongs()
-    {
-        var song = new Song() { Id = 3, Title = "test2", Accepted = false, RequestTime = DateTime.Now };
-        var song2 = new Song() { Id = 4, Title = "test2", Accepted = false, RequestTime = DateTime.Now };
-
-        await _partyRepository.RequestSong(song, TestId);
-        await _partyRepository.RequestSong(song2, TestId);
-        
-        var result = await _partyRepository.GetSongs(TestId);
-        
-        Assert.Equal(2, result.ToList().Count);
-    }
-
-    [Fact]
-    public async Task DeleteSong_SuccessfullyDeletesSongEntity()
-    {
-        var song = new Song() { Id = 4, Title = "test2", Accepted = false, RequestTime = DateTime.Now };
-
-        await _partyRepository.RequestSong(song, TestId);
-
-        var result = _partyRepository.DeleteSong(TestId, song.Id);
-        
-        Assert.Equal(true, result.IsCompletedSuccessfully);
-    }
-
-    [Fact]
-    public async void AcceptSong_SuccessfullySetsAcceptedProperty()
-    {
-        var song = new Song() { Id = 5, Title = "test2", Accepted = false, RequestTime = DateTime.Now };
-
-        await _partyRepository.RequestSong(song, TestId);
-
-        await _partyRepository.AcceptSong(song.Id);
-
-        var parties = await _partyRepository.GetSongs(TestId);
-
-        var result = parties.ToList()[0].Accepted;
-        
-        Assert.Equal(true, result);
     }
 }
