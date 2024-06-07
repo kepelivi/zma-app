@@ -33,6 +33,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ILogger, ConsoleLogger>();
 builder.Services.AddTransient<IPartyRepository, PartyRepository>();
+builder.Services.AddTransient<ISongRepository, SongRepository>();
 builder.Services.AddScoped<AuthenticationSeeder>();
 
 builder.Services.AddDbContext<ZMAContext>((container, options) =>
