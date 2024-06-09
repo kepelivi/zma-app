@@ -24,13 +24,22 @@ public class ZMAContext : IdentityDbContext<Host, IdentityRole, string>
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<Party>()
-            .HasOne(p => p.Host)
-            .WithMany();
+        builder.Entity<Party>(entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.HasOne(p => p.Host)
+                .WithMany();
+            entity.HasMany(p => p.Queue)
+                .WithOne()
+                .HasForeignKey(s => s.PartyId);
+        });
 
-        builder.Entity<Party>()
-            .HasMany(p => p.Queue)
-            .WithOne()
-            .HasForeignKey(s => s.PartyId);
+        builder.Entity<Song>(entity =>
+        {
+            entity.HasKey(s => s.Id);
+            entity.HasOne<Party>()
+                .WithMany(p => p.Queue)
+                .HasForeignKey(s => s.PartyId);
+        });
     }
 }
