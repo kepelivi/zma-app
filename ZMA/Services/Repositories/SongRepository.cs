@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ZMA.Data;
 using ZMA.Model;
+using Exception = System.Exception;
 
 namespace ZMA.Services.Repositories;
 
@@ -21,13 +22,13 @@ public class SongRepository : ISongRepository
         _dbContext = context;
     }
     
-    public async Task<Song> RequestSong(Song song, Guid partyId)
+    public async Task<Song> RequestSong(Song song)
     {
-        var party = await _dbContext.Parties.Include(p => p.Queue).FirstOrDefaultAsync(p => p.Id == partyId);
+        var party = await _dbContext.Parties.Include(p => p.Queue).FirstOrDefaultAsync(p => p.Id == song.PartyId);
 
         if (party == null)
         {
-            throw new Exception("Party not found.");
+            throw new Exception("Party not found");
         }
 
         await _dbContext.Songs.AddAsync(song);
@@ -50,16 +51,9 @@ public class SongRepository : ISongRepository
     
     public async Task<ICollection<Song>> GetSongs(Guid partyId)
     {
-        var party = await _dbContext.Parties.Include(party => party.Queue).SingleAsync(p => p.Id == partyId);
+        var songs = await _dbContext.Songs.Where(s => s.PartyId == partyId).ToListAsync();
 
-        if (party == null)
-        {
-            throw new Exception("Party doesn't exist");
-        }
-
-        var songs = await _dbContext.Songs.ToListAsync();
-
-        if (songs == null)
+        if (songs == null || songs.Count == 0)
         {
             throw new Exception("Queue is empty");
         }
@@ -67,13 +61,11 @@ public class SongRepository : ISongRepository
         return songs;
     }
     
-    public async Task DeleteSong(Guid partyId, int songId)
+    public async Task DeleteSong(int songId)
     {
-        var party = await _dbContext.Parties.Include(party => party.Queue).SingleAsync(p => p.Id == partyId);
-
         var songToDelete = await _dbContext.Songs.SingleAsync(s => s.Id == songId);
 
-        party.Queue.Remove(songToDelete);
+        _dbContext.Songs.Remove(songToDelete);
 
         _dbContext.Entry(songToDelete).State = EntityState.Deleted;
 
