@@ -19,16 +19,16 @@ public class SongController(ISongRepository songRepository, UserManager<Host> us
     {
         try
         {
-            var song = new Song() { Title = title, RequestTime = DateTime.Now, Accepted = false };
+            var song = new Song() { Title = title, RequestTime = DateTime.Now, Accepted = false, PartyId = partyId};
             
-            await songRepository.RequestSong(song, partyId);
+            var requestedSong = await songRepository.RequestSong(song);
 
-            return Ok("Successfully requested song.");
+            return Ok(requestedSong);
         }
         catch (Exception e)
         {
             logger.LogError(e.Message);
-            return NotFound("Requesting song failed.");
+            return BadRequest("Requesting song failed.");
         }
     }
     
@@ -45,7 +45,7 @@ public class SongController(ISongRepository songRepository, UserManager<Host> us
         catch (Exception e)
         {
             logger.LogError(e.Message);
-            return NotFound("Accepting song failed.");
+            return BadRequest("Accepting song failed.");
         }
     }
     
@@ -64,11 +64,11 @@ public class SongController(ISongRepository songRepository, UserManager<Host> us
     }
 
     [HttpDelete("DenySong"), Authorize(Roles = "Host")]
-    public async Task<ActionResult> DenySong([Required] Guid partyId, [Required] int songId)
+    public async Task<ActionResult> DenySong([Required] int songId)
     {
         try
         {
-            await songRepository.DeleteSong(partyId, songId);
+            await songRepository.DeleteSong(songId);
             
             logger.LogInfo("Host deleted song.");
 
@@ -77,7 +77,7 @@ public class SongController(ISongRepository songRepository, UserManager<Host> us
         catch (Exception e)
         {
             logger.LogError(e.Message);
-            return NotFound("Deleting song failed.");
+            return BadRequest("Deleting song failed.");
         }
     }
 }
