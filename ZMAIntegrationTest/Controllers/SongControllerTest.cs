@@ -7,6 +7,7 @@ using ZMA.Model;
 
 namespace ZMAIntegrationTest.Controllers;
 
+[Collection("IntegrationTests")]
 public class SongControllerTest
 {
     private readonly ZMAWebApplicationFactory _app;
