@@ -27,7 +27,7 @@ const Login = ({ port }) => {
         setShowPassword(!showPassword);
     };
 
-    async function handleLogin() {
+    async function handleLogin(email, password) {
         styles.button.backgroundColor = "black";
         try {
             const res = await fetch(`http://localhost:5086/Auth/Login`, {
@@ -80,7 +80,7 @@ const Login = ({ port }) => {
                         </Pressable>
                     </View>
                 </View>
-                <Pressable style={styles.button} onPress={handleLogin}>
+                <Pressable style={styles.button} onPress={() => handleLogin(email, password)}>
                     <Text style={styles.buttonText}>Belépés</Text>
                 </Pressable>
             </View>
