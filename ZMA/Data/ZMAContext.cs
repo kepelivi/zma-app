@@ -10,10 +10,6 @@ public class ZMAContext : IdentityDbContext<Host, IdentityRole, string>
 {
     public DbSet<Party> Parties { get; set; }
     public DbSet<Song> Songs { get; set; }
-
-    public ZMAContext()
-    {
-    }
     
     public ZMAContext (DbContextOptions<ZMAContext> options)
         : base(options)
