@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ZMA.Data;
@@ -15,6 +14,8 @@ public class ZMAWebApplicationFactory : WebApplicationFactory<Program>
     
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Testing");
+        
         builder.ConfigureTestServices(services =>
         {
             var dbContextDescriptor = services.SingleOrDefault(
@@ -29,14 +30,19 @@ public class ZMAWebApplicationFactory : WebApplicationFactory<Program>
             services.Remove(dbContextServiceDescriptor);
             services.RemoveAll(typeof(DbContextOptions<ZMAContext>));
             
-            var config = new ConfigurationBuilder()
-                .AddUserSecrets<ZMAWebApplicationFactory>()
-                .Build();
+            // var config = new ConfigurationBuilder()
+            //     .AddUserSecrets<ZMAWebApplicationFactory>()
+            //     .Build();
+            //
+            // services.AddDbContext<ZMAContext>((container, options) =>
+            // {
+            //     options.UseSqlServer(config["TestConnectionString"] != null
+            //         ? config["TestConnectionString"]:Environment.GetEnvironmentVariable("TESTCONNECTIONSTRING"));
+            // });
             
-            services.AddDbContext<ZMAContext>((container, options) =>
+            services.AddDbContext<ZMAContext>(options =>
             {
-                options.UseSqlServer(config["TestConnectionString"] != null
-                    ? config["TestConnectionString"]:Environment.GetEnvironmentVariable("TESTCONNECTIONSTRING"));
+                options.UseInMemoryDatabase(_dbName);
             });
 
             var serviceProvider = services.BuildServiceProvider();

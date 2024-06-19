@@ -36,8 +36,12 @@ builder.Services.AddTransient<IPartyRepository, PartyRepository>();
 builder.Services.AddTransient<ISongRepository, SongRepository>();
 builder.Services.AddScoped<AuthenticationSeeder>();
 
-builder.Services.AddDbContext<ZMAContext>((container, options) =>
-    options.UseSqlServer(config["ConnectionString"]));
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<ZMAContext>((container, options) =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString"),
+            sqlServerOptions => { sqlServerOptions.EnableRetryOnFailure(); }));
+}
 
 AddAuthentication();
 AddIdentity();

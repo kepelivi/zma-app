@@ -5,6 +5,7 @@ using ZMA.Model;
 
 namespace ZMAIntegrationTest.Controllers;
 
+[Collection("IntegrationTests")]
 public class HostControllerTest
 {
     private readonly ZMAWebApplicationFactory _app;
