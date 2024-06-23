@@ -39,7 +39,7 @@ builder.Services.AddScoped<AuthenticationSeeder>();
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDbContext<ZMAContext>((container, options) =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString"),
+        options.UseSqlServer(config["ConnectionString"],
             sqlServerOptions => { sqlServerOptions.EnableRetryOnFailure(); }));
 }
 

@@ -14,7 +14,6 @@ public class SongControllerTest
     private readonly HttpClient _client;
     private readonly RegistrationReq _hostRegReq;
     private readonly AuthReq _hostAuthReq;
-    private readonly Party _party;
     
     public SongControllerTest()
     {
@@ -22,7 +21,6 @@ public class SongControllerTest
         _client = _app.CreateClient();
         _hostRegReq = new RegistrationReq("host@gmail.com", "host", "Host", "Host!12346");
         _hostAuthReq = new AuthReq("host@gmail.com", "Host!12346");
-        _party = new Party() { Name = "test", Category = "test", Date = DateTime.Now, Details = "test" };
     }
 
     [Fact]
@@ -33,12 +31,10 @@ public class SongControllerTest
         
         var login = await _client.PostAsJsonAsync("/Auth/Login", _hostAuthReq);
         login.EnsureSuccessStatusCode();
-
-        var partyContent = new StringContent(JsonConvert.SerializeObject(_party), Encoding.UTF8, "application/json");
         
         var createParty = await _client.PostAsync(
-            $"/Party/CreateParty?name={_party.Name}&details={_party.Details}&category={_party.Category}&date={_party.Date}",
-            partyContent);
+            "/Party/CreateParty?name=test&details=test&category=test&date=2022-12-12",
+            null);
         createParty.EnsureSuccessStatusCode();
         
         var getParties = await _client.GetAsync("/Party/GetParties");
@@ -46,14 +42,12 @@ public class SongControllerTest
         
         var parties = await getParties.Content.ReadFromJsonAsync<ICollection<Party>>();
 
-        var id = parties.Single(p => p.Name == _party.Name).Id;
+        var id = parties.Single(p => p.Name == "test").Id;
 
         var song = new Song() { PartyId = id, Title = "test" };
 
-        var songContent = new StringContent(JsonConvert.SerializeObject(song), Encoding.UTF8, "application/json");
-
-        var requestSong = await _client.PostAsJsonAsync(
-            $"/Song/RequestSong?title={song.Title}&partyId={id}", songContent);
+        var requestSong = await _client.PostAsync(
+            $"/Song/RequestSong?title={song.Title}&partyId={id}", null);
         requestSong.EnsureSuccessStatusCode();
     }
 
@@ -65,12 +59,10 @@ public class SongControllerTest
         
         var login = await _client.PostAsJsonAsync("/Auth/Login", _hostAuthReq);
         login.EnsureSuccessStatusCode();
-
-        var partyContent = new StringContent(JsonConvert.SerializeObject(_party), Encoding.UTF8, "application/json");
         
         var createParty = await _client.PostAsync(
-            $"/Party/CreateParty?name={_party.Name}&details={_party.Details}&category={_party.Category}&date={_party.Date}",
-            partyContent);
+            "/Party/CreateParty?name=test&details=test&category=test&date=2022-12-12",
+            null);
         createParty.EnsureSuccessStatusCode();
         
         var getParties = await _client.GetAsync("/Party/GetParties");
@@ -78,14 +70,12 @@ public class SongControllerTest
         
         var parties = await getParties.Content.ReadFromJsonAsync<ICollection<Party>>();
 
-        var id = parties.Single(p => p.Name == _party.Name).Id;
+        var id = parties.Single(p => p.Name == "test").Id;
 
         var song = new Song() { PartyId = id, Title = "test" };
-
-        var songContent = new StringContent(JsonConvert.SerializeObject(song), Encoding.UTF8, "application/json");
-
-        var requestSong = await _client.PostAsJsonAsync(
-            $"/Song/RequestSong?title={song.Title}&partyId={id}", songContent);
+        
+        var requestSong = await _client.PostAsync(
+            $"/Song/RequestSong?title={song.Title}&partyId={id}", null);
         requestSong.EnsureSuccessStatusCode();
 
         var requestedSong = await requestSong.Content.ReadFromJsonAsync<Song>();
@@ -105,11 +95,9 @@ public class SongControllerTest
         var login = await _client.PostAsJsonAsync("/Auth/Login", _hostAuthReq);
         login.EnsureSuccessStatusCode();
 
-        var partyContent = new StringContent(JsonConvert.SerializeObject(_party), Encoding.UTF8, "application/json");
-        
         var createParty = await _client.PostAsync(
-            $"/Party/CreateParty?name={_party.Name}&details={_party.Details}&category={_party.Category}&date={_party.Date}",
-            partyContent);
+            "/Party/CreateParty?name=test&details=test&category=test&date=2022-12-12",
+            null);
         createParty.EnsureSuccessStatusCode();
         
         var getParties = await _client.GetAsync("/Party/GetParties");
@@ -117,14 +105,12 @@ public class SongControllerTest
         
         var parties = await getParties.Content.ReadFromJsonAsync<ICollection<Party>>();
 
-        var id = parties.Single(p => p.Name == _party.Name).Id;
+        var id = parties.Single(p => p.Name == "test").Id;
 
         var song = new Song() { PartyId = id, Title = "test" };
-
-        var songContent = new StringContent(JsonConvert.SerializeObject(song), Encoding.UTF8, "application/json");
-
-        var requestSong = await _client.PostAsJsonAsync(
-            $"/Song/RequestSong?title={song.Title}&partyId={id}", songContent);
+        
+        var requestSong = await _client.PostAsync(
+            $"/Song/RequestSong?title={song.Title}&partyId={id}", null);
         requestSong.EnsureSuccessStatusCode();
 
         var getSongs = await _client.GetAsync($"Song/GetSongs?partyId={id}");
@@ -144,18 +130,16 @@ public class SongControllerTest
         var login = await _client.PostAsJsonAsync("/Auth/Login", _hostAuthReq);
         login.EnsureSuccessStatusCode();
         
-        var partyContent = new StringContent(JsonConvert.SerializeObject(_party), Encoding.UTF8, "application/json");
-        
         var createParty = await _client.PostAsync(
-            $"/Party/CreateParty?name={_party.Name}&details={_party.Details}&category={_party.Category}&date={_party.Date}",
-            partyContent);
+            "/Party/CreateParty?name=test&details=test&category=test&date=2022-12-12",
+            null);
         createParty.EnsureSuccessStatusCode();
         
         var getParties = await _client.GetAsync("/Party/GetParties");
         getParties.EnsureSuccessStatusCode();
         
         var parties = await getParties.Content.ReadFromJsonAsync<ICollection<Party>>();
-        var id = parties.Single(p => p.Name == _party.Name).Id;
+        var id = parties.Single(p => p.Name == "test").Id;
         
         var getSongs = await _client.GetAsync($"Song/GetSongs?partyId={id}");
         
@@ -170,12 +154,10 @@ public class SongControllerTest
         
         var login = await _client.PostAsJsonAsync("/Auth/Login", _hostAuthReq);
         login.EnsureSuccessStatusCode();
-
-        var partyContent = new StringContent(JsonConvert.SerializeObject(_party), Encoding.UTF8, "application/json");
         
         var createParty = await _client.PostAsync(
-            $"/Party/CreateParty?name={_party.Name}&details={_party.Details}&category={_party.Category}&date={_party.Date}",
-            partyContent);
+            "/Party/CreateParty?name=test&details=test&category=test&date=2022-12-12",
+            null);
         createParty.EnsureSuccessStatusCode();
         
         var getParties = await _client.GetAsync("/Party/GetParties");
@@ -183,14 +165,12 @@ public class SongControllerTest
         
         var parties = await getParties.Content.ReadFromJsonAsync<ICollection<Party>>();
 
-        var id = parties.Single(p => p.Name == _party.Name).Id;
+        var id = parties.Single(p => p.Name == "test").Id;
 
         var song = new Song() { PartyId = id, Title = "test" };
 
-        var songContent = new StringContent(JsonConvert.SerializeObject(song), Encoding.UTF8, "application/json");
-
-        var requestSong = await _client.PostAsJsonAsync(
-            $"/Song/RequestSong?title={song.Title}&partyId={id}", songContent);
+        var requestSong = await _client.PostAsync(
+            $"/Song/RequestSong?title={song.Title}&partyId={id}", null);
         requestSong.EnsureSuccessStatusCode();
         
         var requestedSong = await requestSong.Content.ReadFromJsonAsync<Song>();

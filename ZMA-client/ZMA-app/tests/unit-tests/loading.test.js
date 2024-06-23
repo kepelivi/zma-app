@@ -2,8 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import Loading from '../../components/loading';
 
-describe('loading should render', () => {
-    test('given text parameter', () => {
+describe('Loading component', () => {
+    test('should render given text argument', () => {
         const { getByText } = render(
             <Loading message="Hello" />,
         );
@@ -12,12 +12,12 @@ describe('loading should render', () => {
         expect(message).toBeTruthy();
     });
     
-    test('default parameter when no arguments given', () => {
+    test('should render default parameter when no arguments given', () => {
         const { getByText } = render(
             <Loading />,
         );
 
         const message = getByText("Loading...");
         expect(message).toBeTruthy();
-    })
+    });
 });
