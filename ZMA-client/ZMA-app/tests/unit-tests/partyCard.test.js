@@ -18,8 +18,6 @@ jest.mock('expo-router', () => ({
 
 describe('PartyCard component', () => {
     const mockedNavigate = jest.fn();
-    const setParties = jest.fn();
-    const setLoading = jest.fn();
 
     beforeEach(() => {
         global.fetch.mockClear();
