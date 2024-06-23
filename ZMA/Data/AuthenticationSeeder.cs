@@ -36,7 +36,7 @@ public class AuthenticationSeeder(RoleManager<IdentityRole> roleManager, UserMan
 
             if (adminCreated.Succeeded)
             {
-                await userManager.AddToRoleAsync(admin, _config["HostRole"] != null ? _config["HostRole"] : Environment.GetEnvironmentVariable("HostRole"));
+                await userManager.AddToRoleAsync(admin, _config["HostRole"] != null ? _config["HostRole"] : Environment.GetEnvironmentVariable("HOSTROLE"));
             }
         }
     }
