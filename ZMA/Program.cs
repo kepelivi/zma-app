@@ -1,5 +1,4 @@
 using System.Text;
-using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +38,7 @@ builder.Services.AddScoped<AuthenticationSeeder>();
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDbContext<ZMAContext>((container, options) =>
-        options.UseSqlServer(config["ConnectionString"],
+        options.UseNpgsql(config["ConnectionString"],
             sqlServerOptions => { sqlServerOptions.EnableRetryOnFailure(); }));
 }
 
