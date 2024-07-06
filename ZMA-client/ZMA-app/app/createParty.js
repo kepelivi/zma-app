@@ -5,6 +5,7 @@ import { notification } from "antd";
 
 import DateSetter from "../components/datePicker";
 import { COLORS } from "../constants/theme";
+import { apiUrl } from "../constants/config";
 import Logo from "../components/logo";
 import GoBack from "../components/back";
 
@@ -22,7 +23,7 @@ export default function createParty() {
     const navigation = useNavigation();
 
     async function handleCreate() {
-        const res = await fetch(`http://localhost:5086/Party/CreateParty?name=${name}&details=${details}&category=${category}&date=${date}`, {
+        const res = await fetch(`${apiUrl}/Party/CreateParty?name=${name}&details=${details}&category=${category}&date=${date}`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' }

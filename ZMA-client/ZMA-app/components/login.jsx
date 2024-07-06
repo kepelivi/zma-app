@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { useNavigation } from "expo-router";
 import { notification } from "antd";
+import { apiUrl } from "../constants/config";
 
 notification.config({
     duration: 2,
@@ -30,7 +31,7 @@ const Login = ({ port }) => {
     async function handleLogin(email, password) {
         styles.button.backgroundColor = "black";
         try {
-            const res = await fetch(`http://localhost:5086/Auth/Login`, {
+            const res = await fetch(`${apiUrl}/Auth/Login`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },

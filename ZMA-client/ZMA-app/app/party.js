@@ -3,13 +3,14 @@ import { useState, useEffect } from 'react';
 import { useNavigation } from "expo-router";
 
 import { COLORS } from '../constants/theme';
+import { apiUrl } from "../constants/config";
 import PartyCard from '../components/partyCard';
 import Logo from '../components/logo';
 import Loading from '../components/loading';
 import LogOut from '../components/logout';
 
 export async function fetchParties() {
-    const res = await fetch(`http://localhost:5086/Party/GetParties`,
+    const res = await fetch(`${apiUrl}/Party/GetParties`,
         {
             method: "GET",
             credentials: 'include',
@@ -32,7 +33,7 @@ export async function fetchAndSortParties(setParties, setLoading) {
 };
 
 export async function onDelete(id, setParties, setLoading) {
-    await fetch(`http://localhost:5086/Party/DeleteParty?partyId=${id}`,
+    await fetch(`${apiUrl}/Party/DeleteParty?partyId=${id}`,
         {
             method: "DELETE",
             credentials: 'include',
