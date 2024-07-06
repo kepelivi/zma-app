@@ -2,16 +2,17 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useNavigation } from "expo-router";
 
 import { COLORS } from "../constants/theme";
+import { apiUrl } from "../constants/config";
+
+export function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;';
+}
 
 export default function LogOut() {
     const navigation = useNavigation();
 
-    function eraseCookie(name) {
-        document.cookie = name + '=; Max-Age=-99999999;';
-    }
-
     async function logout() {
-        const res = await fetch("http://localhost:5086/Auth/Logout", {
+        const res = await fetch(`${apiUrl}/Auth/Logout`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
@@ -53,4 +54,4 @@ const styles = StyleSheet.create({
         color: COLORS.white,
         fontWeight: 'bold',
     },
-})
+});

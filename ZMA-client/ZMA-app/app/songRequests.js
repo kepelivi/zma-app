@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import SongCard from '../components/songCard';
 import Logo from '../components/logo';
 import { COLORS } from '../constants/theme';
+import { apiUrl } from "../constants/config";
 import Loading from '../components/loading';
 import GoBack from '../components/back';
 
@@ -16,7 +17,7 @@ export default function songRequests() {
     const { params } = route;
 
     async function fetchSongs() {
-        const res = await fetch(`http://localhost:5086/Song/GetSongs?partyId=${params.id}`,
+        const res = await fetch(`${apiUrl}/Song/GetSongs?partyId=${params.id}`,
             {
                 method: "GET",
                 credentials: 'include',
@@ -27,7 +28,7 @@ export default function songRequests() {
 
     async function handleAccept(songId) {
         try {
-            const res = await fetch(`http://localhost:5086/Song/AcceptSong?songId=${songId}`,
+            const res = await fetch(`${apiUrl}/Song/AcceptSong?songId=${songId}`,
                 {
                     method: "PATCH",
                     credentials: 'include',
@@ -45,7 +46,7 @@ export default function songRequests() {
 
     async function handleDeny(songId) {
         try {
-            const res = await fetch(`http://localhost:5086/Song/DenySong?partyId=${params.id}&songId=${songId}`,
+            const res = await fetch(`${apiUrl}/Song/DenySong?partyId=${params.id}&songId=${songId}`,
                 {
                     method: "DELETE",
                     credentials: 'include',
