@@ -19,7 +19,7 @@ public class SongController(ISongRepository songRepository, UserManager<Host> us
     {
         try
         {
-            var song = new Song() { Title = title, RequestTime = DateTime.Now, Accepted = false, PartyId = partyId};
+            var song = new Song() { Title = title, RequestTime = DateTime.UtcNow, Accepted = false, PartyId = partyId};
             
             var requestedSong = await songRepository.RequestSong(song);
 

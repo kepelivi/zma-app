@@ -30,7 +30,14 @@ public class PartyRepository : IPartyRepository
             throw new Exception("Host not found for creating a party.");
         }
 
-        var createdParty = new Party { Name = party.Name, Host = host, Date = party.Date, Category = party.Category, Details = party.Details};
+        var createdParty = new Party 
+        { 
+            Name = party.Name, 
+            Host = host, 
+            Date = DateTime.SpecifyKind(party.Date, DateTimeKind.Utc), 
+            Category = party.Category, 
+            Details = party.Details
+        };
 
         await _dbContext.Parties.AddAsync(createdParty);
         await _dbContext.SaveChangesAsync();
@@ -79,7 +86,7 @@ public class PartyRepository : IPartyRepository
         partyToUpdate.Name = name;
         partyToUpdate.Details = details;
         partyToUpdate.Category = category;
-        partyToUpdate.Date = date;
+        partyToUpdate.Date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
 
         await _dbContext.SaveChangesAsync();
     }
