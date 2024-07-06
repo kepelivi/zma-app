@@ -23,12 +23,8 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore ZMA
-    - name: "Print Working Directory"
-      run: pwd
     - name: Build
       run: dotnet build ZMA.sln
-    - name: "Print Working Directory"
-      run: pwd
     - name: Test
       env:
         HOSTROLE: ${{ secrets.HOSTROLE }}
