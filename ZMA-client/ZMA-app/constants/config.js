@@ -1,3 +1,1 @@
-import Config from 'react-native-config';
-
-export const port = Config.PORT;
+export const apiUrl = process.env.EXPO_PUBLIC_API_URL;
