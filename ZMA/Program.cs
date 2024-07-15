@@ -35,10 +35,10 @@ builder.Services.AddTransient<IPartyRepository, PartyRepository>();
 builder.Services.AddTransient<ISongRepository, SongRepository>();
 builder.Services.AddScoped<AuthenticationSeeder>();
 
-if (builder.Environment.IsDevelopment())
+if (!builder.Environment.IsEnvironment("Testing"))
 {
     builder.Services.AddDbContext<ZMAContext>((container, options) =>
-        options.UseNpgsql(config["ConnectionString"],
+        options.UseNpgsql(config["ConnectionString"] ?? Environment.GetEnvironmentVariable("CONNECTIONSTRING"),
             sqlServerOptions => { sqlServerOptions.EnableRetryOnFailure(); }));
 }
 
@@ -63,11 +63,35 @@ app.UseAuthorization();
 app.MapControllers();
 
 using var scope = app.Services.CreateScope();
+
+try
+{
+    var context = scope.ServiceProvider.GetRequiredService<ZMAContext>();
+    context.Database.EnsureCreated();
+    context.Database.Migrate();
+}
+catch(Exception ex)
+{
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred while migrating the database.");
+}
+
 var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
 
 authenticationSeeder.AddRole();
-
 authenticationSeeder.AddHost();
+
+try
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "5086";
+    app.Run($"http://*:{port}");
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "Application failed to start.");
+    throw;
+}
 
 app.Run();
 
