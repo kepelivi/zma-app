@@ -38,7 +38,7 @@ builder.Services.AddScoped<AuthenticationSeeder>();
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDbContext<ZMAContext>((container, options) =>
-        options.UseNpgsql(config["ConnectionString"],
+        options.UseNpgsql(config["ConnectionString"] ?? Environment.GetEnvironmentVariable("CONNECTIONSTRING"),
             sqlServerOptions => { sqlServerOptions.EnableRetryOnFailure(); }));
 }
 
