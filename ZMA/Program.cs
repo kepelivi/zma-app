@@ -63,10 +63,22 @@ app.UseAuthorization();
 app.MapControllers();
 
 using var scope = app.Services.CreateScope();
+
+try
+{
+    var context = scope.ServiceProvider.GetRequiredService<ZMAContext>();
+    context.Database.EnsureCreated();
+    context.Database.Migrate();
+}
+catch(Exception ex)
+{
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred while migrating the database.");
+}
+
 var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
 
 authenticationSeeder.AddRole();
-
 authenticationSeeder.AddHost();
 
 app.Run();
