@@ -35,10 +35,7 @@ builder.Services.AddTransient<IPartyRepository, PartyRepository>();
 builder.Services.AddTransient<ISongRepository, SongRepository>();
 builder.Services.AddScoped<AuthenticationSeeder>();
 
-if (builder.Environment.IsEnvironment("Testing"))
-{
-}
-else
+if (!builder.Environment.IsEnvironment("Testing"))
 {
     builder.Services.AddDbContext<ZMAContext>((container, options) =>
         options.UseNpgsql(config["ConnectionString"] ?? Environment.GetEnvironmentVariable("CONNECTIONSTRING"),
