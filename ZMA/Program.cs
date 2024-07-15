@@ -81,6 +81,18 @@ var authenticationSeeder = scope.ServiceProvider.GetRequiredService<Authenticati
 authenticationSeeder.AddRole();
 authenticationSeeder.AddHost();
 
+try
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "5086";
+    app.Run($"http://*:{port}");
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "Application failed to start.");
+    throw;
+}
+
 app.Run();
 
 void ConfigureSwagger()
