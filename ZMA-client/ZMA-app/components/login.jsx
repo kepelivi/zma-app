@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useNavigation } from "expo-router";
 import { notification } from "antd";
 import { apiUrl } from "../constants/config";
+import LoginEye from "./loginEye";
 
 notification.config({
     duration: 2,
@@ -18,7 +19,7 @@ notification.config({
 
 import { COLORS } from "../constants/theme";
 
-const Login = ({ port }) => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -74,10 +75,10 @@ const Login = ({ port }) => {
                         />
                         <Pressable
                             size={24}
-                            style={styles.icon}
                             onPress={toggleShowPassword}
+                            accessibilityLabel='toggle-password-visibility'
                         >
-                            <Text>{showPassword ? 'X' : 'O'}</Text>
+                            <LoginEye showPassword={showPassword} />
                         </Pressable>
                     </View>
                 </View>

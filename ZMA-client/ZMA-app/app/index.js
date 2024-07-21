@@ -12,12 +12,11 @@ import Logo from '../components/logo';
 import Camera from '../components/camera';
 
 export default function Home() {
-  const port = '';
   return (
     <View style={styles.container}>
       <Logo />
       <StatusBar style="auto" />
-      <Login port={port}/>
+      <Login />
       <Text>Vendég vagy?</Text>
       <Text>Scanneld be a QR kódot!</Text>
       <Camera />
