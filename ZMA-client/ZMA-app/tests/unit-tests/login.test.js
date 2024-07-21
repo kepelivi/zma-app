@@ -39,10 +39,10 @@ describe('Login component', () => {
     });
 
     test('should show password when toggle is clicked', () => {
-        const { getByPlaceholderText, getByText } = render(<Login />);
+        const { getByPlaceholderText, getByLabelText } = render(<Login />);
 
         const passwordInput = getByPlaceholderText('JELSZÓ');
-        const toggleButton = getByText('O');
+        const toggleButton = getByLabelText('toggle-password-visibility');
 
         fireEvent.press(toggleButton);
         expect(passwordInput.props.secureTextEntry).toBe(false);
