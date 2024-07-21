@@ -76,6 +76,7 @@ const Login = () => {
                         <Pressable
                             size={24}
                             onPress={toggleShowPassword}
+                            accessibilityLabel='toggle-password-visibility'
                         >
                             <LoginEye showPassword={showPassword} />
                         </Pressable>
