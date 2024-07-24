@@ -3,7 +3,6 @@ import { useNavigation } from "expo-router";
 import { useState } from "react";
 import { notification } from "antd";
 
-import DateSetter from "../components/datePicker";
 import { COLORS } from "../constants/theme";
 import { apiUrl } from "../constants/config";
 import Logo from "../components/logo";
@@ -68,7 +67,6 @@ export default function createParty() {
                         autoCapitalize="none"
                         placeholderTextColor={COLORS.greyish}
                     />
-                    <DateSetter date={date} setDate={setDate} />
                     <Pressable style={styles.button} onPress={handleCreate}>
                         <Text style={styles.buttonText}>Mentés</Text>
                     </Pressable>
