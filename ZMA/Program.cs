@@ -22,8 +22,12 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 
 var config =
     new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
         .AddUserSecrets<Program>()
         .Build();
+
+builder.Configuration.AddConfiguration(config);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -142,9 +146,9 @@ void AddCors()
                     {
                         if (string.IsNullOrWhiteSpace(origin)) return false;
                         // Only add this to allow testing with localhost, remove this line in production!
-                        if (origin.ToLower().StartsWith("http://localhost")) return true;
+                        // if (origin.ToLower().StartsWith("http://localhost")) return true;
                         // Insert your production domain here.
-                        if (origin.ToLower().StartsWith("https://okztfpy-anonymous-8081.exp.direct")) return true;
+                        if (origin.ToLower().StartsWith("https://zma-app.onrender.com")) return true;
                         return false;
                     });
             });
@@ -157,12 +161,9 @@ void AddAuthentication()
         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-            var issuerSignInKey = config["IssuerSigningKey"] != null
-                ? config["IssuerSigningKey"] : Environment.GetEnvironmentVariable("ISSUERSIGNINGKEY");
-            var validIssuer = config["ValidIssuer"] != null
-                ? config["ValidIssuer"] : Environment.GetEnvironmentVariable("VALIDISSUER");
-            var validAudience = config["ValidAudience"] != null
-                ? config["ValidAudience"] : Environment.GetEnvironmentVariable("VALIDAUDIENCE");
+            var issuerSignInKey = config["IssuerSigningKey"] ?? Environment.GetEnvironmentVariable("ISSUERSIGNINGKEY");
+            var validIssuer = config["ValidIssuer"] ?? Environment.GetEnvironmentVariable("VALIDISSUER");
+            var validAudience = config["ValidAudience"] ?? Environment.GetEnvironmentVariable("VALIDAUDIENCE");
         
             options.TokenValidationParameters = new TokenValidationParameters()
             {

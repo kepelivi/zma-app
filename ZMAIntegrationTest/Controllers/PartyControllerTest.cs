@@ -182,7 +182,7 @@ public class PartyControllerTest
     }
 
     [Fact]
-    public async Task GetParties_ThrowsExceptionWhen_Empty()
+    public async Task GetParties_ReturnsEmptyListWhen_Empty()
     {
         var register = await _client.PostAsJsonAsync("/Auth/Register", _hostRegReq);
         register.EnsureSuccessStatusCode();
@@ -192,7 +192,9 @@ public class PartyControllerTest
 
         var getParties = await _client.GetAsync("/Party/GetParties");
 
-        Assert.Equal(HttpStatusCode.NotFound, getParties.StatusCode);
+        var parties = await getParties.Content.ReadFromJsonAsync<ICollection<Party>>();
+
+        Assert.Equal(0, parties.Count);
     }
 
     [Fact]

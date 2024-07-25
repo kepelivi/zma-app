@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
@@ -29,10 +28,8 @@ public class TokenService : ITokenService
     private JwtSecurityToken CreateJwtToken(List<Claim> claims, SigningCredentials credentials,
         DateTime expiration) =>
         new(
-            _config["ValidIssuer"] != null
-                ? _config["ValidIssuer"] : Environment.GetEnvironmentVariable("VALIDISSUER"),
-            _config["ValidAudience"] != null
-                ? _config["ValidAudience"] : Environment.GetEnvironmentVariable("VALIDAUDIENCE"),
+            _config["ValidIssuer"] ?? Environment.GetEnvironmentVariable("VALIDISSUER"),
+            _config["ValidAudience"] ?? Environment.GetEnvironmentVariable("VALIDAUDIENCE"),
             claims,
             expires: expiration,
             signingCredentials: credentials
@@ -68,7 +65,7 @@ public class TokenService : ITokenService
     {
         return new SigningCredentials(
             new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_config["IssuerSigningKey"] != null ? _config["IssuerSigningKey"] : Environment.GetEnvironmentVariable("ISSUERSIGNINGKEY"))
+                Encoding.UTF8.GetBytes(_config["IssuerSigningKey"] ?? Environment.GetEnvironmentVariable("ISSUERSIGNINGKEY"))
             ),
             SecurityAlgorithms.HmacSha256
         );

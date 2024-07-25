@@ -7,17 +7,13 @@ namespace ZMA.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthController(IAuthService authenticationService, ILogger logger) : ControllerBase
+public class AuthController(IAuthService authenticationService, ILogger logger, IConfiguration config) : ControllerBase
 {
-    private readonly IConfigurationRoot _config = new ConfigurationBuilder()
-        .AddUserSecrets<AuthController>()
-        .Build();
-
     [HttpPost("Register")]
     public async Task<ActionResult<RegistrationRes>> RegisterHost(RegistrationReq request)
     {
-        var result = await authenticationService.RegisterAsync(request.Email, request.Username, request.Name, request.Password, _config["HostRole"] != null
-            ? _config["HostRole"] : Environment.GetEnvironmentVariable("HOSTROLE"));
+        var result = await authenticationService.RegisterAsync(request.Email, request.Username, request.Name, request.Password,
+            config["HostRole"] ?? Environment.GetEnvironmentVariable("HOSTROLE"));
         
         if (!result.Success)
         {
@@ -48,7 +44,15 @@ public class AuthController(IAuthService authenticationService, ILogger logger) 
         
         logger.LogInfo($"Host logged in - email: {result.Email}, username: {result.UserName}");
         
-        Response.Cookies.Append("Host", result.Token, new CookieOptions() { HttpOnly = false, SameSite = SameSiteMode.Strict });
+        var secure = config.GetValue<bool>("CookieSettings:Secure", true);
+        var sameSite = config.GetValue("CookieSettings:SameSite", "None");
+
+        Response.Cookies.Append("Host", result.Token, new CookieOptions()
+        {
+            HttpOnly = false,
+            Secure = secure,
+            SameSite = Enum.TryParse<SameSiteMode>(sameSite, out var sameSiteMode) ? sameSiteMode : SameSiteMode.None
+        });
 
         return Ok();
     }

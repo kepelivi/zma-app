@@ -3,7 +3,6 @@ import { useNavigation } from "expo-router";
 import { useState } from "react";
 import { notification } from "antd";
 
-import DateSetter from "../components/datePicker";
 import { COLORS } from "../constants/theme";
 import { apiUrl } from "../constants/config";
 import Logo from "../components/logo";
@@ -23,7 +22,7 @@ export default function createParty() {
     const navigation = useNavigation();
 
     async function handleCreate() {
-        const res = await fetch(`${apiUrl}/Party/CreateParty?name=${name}&details=${details}&category=${category}&date=${date}`, {
+        const res = await fetch(`${apiUrl}Party/CreateParty?name=${name}&details=${details}&category=${category}&date=${date}`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' }
@@ -68,7 +67,15 @@ export default function createParty() {
                         autoCapitalize="none"
                         placeholderTextColor={COLORS.greyish}
                     />
-                    <DateSetter date={date} setDate={setDate} />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Dátum (pl.: 2024-12-12)"
+                        value={date}
+                        onChangeText={setDate}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        placeholderTextColor={COLORS.greyish}
+                    />
                     <Pressable style={styles.button} onPress={handleCreate}>
                         <Text style={styles.buttonText}>Mentés</Text>
                     </Pressable>

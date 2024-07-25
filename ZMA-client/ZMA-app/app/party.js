@@ -10,7 +10,7 @@ import Loading from '../components/loading';
 import LogOut from '../components/logout';
 
 export async function fetchParties() {
-    const res = await fetch(`${apiUrl}/Party/GetParties`,
+    const res = await fetch(`${apiUrl}Party/GetParties`,
         {
             method: "GET",
             credentials: 'include',
@@ -33,7 +33,7 @@ export async function fetchAndSortParties(setParties, setLoading) {
 };
 
 export async function onDelete(id, setParties, setLoading) {
-    await fetch(`${apiUrl}/Party/DeleteParty?partyId=${id}`,
+    await fetch(`${apiUrl}Party/DeleteParty?partyId=${id}`,
         {
             method: "DELETE",
             credentials: 'include',
@@ -66,12 +66,16 @@ export default function PartyManager() {
                     <Text style={styles.buttonText}>Buli létrehozás</Text>
                 </Pressable>
             </View>
-            <FlatList
+            {parties.length === 0 ? (
+                <View style={styles.messageContainer}>
+                    <Text style={styles.message}>Nincsenek még bulik. Hozz létre egyet!</Text>
+                </View>
+            ) : (<FlatList
                 data={parties}
                 renderItem={({ item }) => <PartyCard party={item} onPress={() => navigation.navigate('songRequests', { id: item.id })} onDelete={() => onDelete(item.id, setParties, setLoading)} />}
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.listContent}
-            />
+            />)}
         </SafeAreaView>
     )
 }
@@ -111,4 +115,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#FFFFFF',
     },
+    messageContainer: {
+        alignItems: 'center'
+    },
+    message: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#000',
+    }
 });

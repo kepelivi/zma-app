@@ -53,11 +53,6 @@ public class SongRepository : ISongRepository
     {
         var songs = await _dbContext.Songs.Where(s => s.PartyId == partyId).ToListAsync();
 
-        if (songs == null || songs.Count == 0)
-        {
-            throw new Exception("Queue is empty");
-        }
-
         return songs;
     }
     

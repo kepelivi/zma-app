@@ -17,7 +17,7 @@ export default function songRequests() {
     const { params } = route;
 
     async function fetchSongs() {
-        const res = await fetch(`${apiUrl}/Song/GetSongs?partyId=${params.id}`,
+        const res = await fetch(`${apiUrl}Song/GetSongs?partyId=${params.id}`,
             {
                 method: "GET",
                 credentials: 'include',
@@ -28,7 +28,7 @@ export default function songRequests() {
 
     async function handleAccept(songId) {
         try {
-            const res = await fetch(`${apiUrl}/Song/AcceptSong?songId=${songId}`,
+            const res = await fetch(`${apiUrl}Song/AcceptSong?songId=${songId}`,
                 {
                     method: "PATCH",
                     credentials: 'include',
@@ -46,7 +46,7 @@ export default function songRequests() {
 
     async function handleDeny(songId) {
         try {
-            const res = await fetch(`${apiUrl}/Song/DenySong?partyId=${params.id}&songId=${songId}`,
+            const res = await fetch(`${apiUrl}Song/DenySong?partyId=${params.id}&songId=${songId}`,
                 {
                     method: "DELETE",
                     credentials: 'include',
@@ -91,12 +91,16 @@ export default function songRequests() {
             <View style={styles.header}>
                 <Text style={styles.main}>Kért zenék</Text>
             </View>
-            <FlatList
+            {songs.length === 0 ? (
+                <View style={styles.messageContainer}>
+                    <Text style={styles.message}>Nincs még egy zenekérés sem.</Text>
+                </View>
+            ) : (<FlatList
                 data={songs}
                 renderItem={({ item }) => <SongCard song={item} onAccept={() => handleAccept(item.id)} onDeny={() => handleDeny(item.id)} />}
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.listContent}
-            />
+            />)}
         </SafeAreaView>
     )
 }
@@ -119,4 +123,12 @@ const styles = StyleSheet.create({
     listContent: {
         padding: 16,
     },
+    messageContainer: {
+        alignItems: 'center'
+    },
+    message: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#000',
+    }
 });

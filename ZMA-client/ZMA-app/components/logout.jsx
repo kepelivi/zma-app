@@ -12,7 +12,7 @@ export default function LogOut() {
     const navigation = useNavigation();
 
     async function logout() {
-        const res = await fetch(`${apiUrl}/Auth/Logout`, {
+        const res = await fetch(`${apiUrl}Auth/Logout`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
