@@ -54,6 +54,8 @@ export default function PartyManager() {
 
     if (loading) return <Loading />
 
+    if (parties.length === 0) return <View><Text>Nincs még egy buli sem. Hozz létre egyet!</Text></View>
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <LogOut />
