@@ -48,7 +48,7 @@ public class AuthController(IAuthService authenticationService, ILogger logger) 
         
         logger.LogInfo($"Host logged in - email: {result.Email}, username: {result.UserName}");
         
-        Response.Cookies.Append("Host", result.Token, new CookieOptions() { HttpOnly = false, SameSite = SameSiteMode.Strict });
+        Response.Cookies.Append("Host", result.Token, new CookieOptions() { HttpOnly = false, SameSite = SameSiteMode.None, Secure=true });
 
         return Ok();
     }
