@@ -22,8 +22,12 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 
 var config =
     new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
         .AddUserSecrets<Program>()
         .Build();
+
+builder.Configuration.AddConfiguration(config);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
