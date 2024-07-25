@@ -84,8 +84,6 @@ export default function songRequests() {
 
     if (loading) return <Loading />
 
-    if (songs.length === 0) return <View><Text>Nincsenek még zenekérések.</Text></View>
-
     return (
         <SafeAreaView style={styles.safeArea}>
             <GoBack />
