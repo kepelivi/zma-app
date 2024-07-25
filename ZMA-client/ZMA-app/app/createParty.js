@@ -67,6 +67,15 @@ export default function createParty() {
                         autoCapitalize="none"
                         placeholderTextColor={COLORS.greyish}
                     />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Dátum (pl.: 2024-12-12)"
+                        value={date}
+                        onChangeText={setDate}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        placeholderTextColor={COLORS.greyish}
+                    />
                     <Pressable style={styles.button} onPress={handleCreate}>
                         <Text style={styles.buttonText}>Mentés</Text>
                     </Pressable>
