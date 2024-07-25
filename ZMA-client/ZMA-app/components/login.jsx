@@ -32,7 +32,7 @@ const Login = () => {
     async function handleLogin(email, password) {
         styles.button.backgroundColor = "black";
         try {
-            const res = await fetch(`${apiUrl}/Auth/Login`, {
+            const res = await fetch(`${apiUrl}Auth/Login`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },

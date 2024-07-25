@@ -17,7 +17,7 @@ export default function songRequests() {
     const { params } = route;
 
     async function fetchSongs() {
-        const res = await fetch(`${apiUrl}/Song/GetSongs?partyId=${params.id}`,
+        const res = await fetch(`${apiUrl}Song/GetSongs?partyId=${params.id}`,
             {
                 method: "GET",
                 credentials: 'include',
@@ -28,7 +28,7 @@ export default function songRequests() {
 
     async function handleAccept(songId) {
         try {
-            const res = await fetch(`${apiUrl}/Song/AcceptSong?songId=${songId}`,
+            const res = await fetch(`${apiUrl}Song/AcceptSong?songId=${songId}`,
                 {
                     method: "PATCH",
                     credentials: 'include',
@@ -46,7 +46,7 @@ export default function songRequests() {
 
     async function handleDeny(songId) {
         try {
-            const res = await fetch(`${apiUrl}/Song/DenySong?partyId=${params.id}&songId=${songId}`,
+            const res = await fetch(`${apiUrl}Song/DenySong?partyId=${params.id}&songId=${songId}`,
                 {
                     method: "DELETE",
                     credentials: 'include',

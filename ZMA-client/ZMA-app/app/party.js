@@ -10,7 +10,7 @@ import Loading from '../components/loading';
 import LogOut from '../components/logout';
 
 export async function fetchParties() {
-    const res = await fetch(`${apiUrl}/Party/GetParties`,
+    const res = await fetch(`${apiUrl}Party/GetParties`,
         {
             method: "GET",
             credentials: 'include',
@@ -33,7 +33,7 @@ export async function fetchAndSortParties(setParties, setLoading) {
 };
 
 export async function onDelete(id, setParties, setLoading) {
-    await fetch(`${apiUrl}/Party/DeleteParty?partyId=${id}`,
+    await fetch(`${apiUrl}Party/DeleteParty?partyId=${id}`,
         {
             method: "DELETE",
             credentials: 'include',

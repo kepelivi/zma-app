@@ -22,7 +22,7 @@ export default function createParty() {
     const navigation = useNavigation();
 
     async function handleCreate() {
-        const res = await fetch(`${apiUrl}/Party/CreateParty?name=${name}&details=${details}&category=${category}&date=${date}`, {
+        const res = await fetch(`${apiUrl}Party/CreateParty?name=${name}&details=${details}&category=${category}&date=${date}`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' }
