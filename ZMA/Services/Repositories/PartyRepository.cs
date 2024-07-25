@@ -59,11 +59,6 @@ public class PartyRepository : IPartyRepository
     public async Task<ICollection<Party>> GetParties()
     {
         var parties = await _dbContext.Parties.Include(party => party.Queue).ToListAsync();
-
-        if (parties.Count == 0)
-        {
-            throw new Exception("No parties found.");
-        }
         
         return parties;
     }
