@@ -122,7 +122,7 @@ public class SongControllerTest
     }
 
     [Fact]
-    public async Task GetSongs_ReturnsNotFoundWhen_SongsIsEmpty()
+    public async Task GetSongs_ReturnsEmptyListWhen_SongsIsEmpty()
     {
         var register = await _client.PostAsJsonAsync("/Auth/Register", _hostRegReq);
         register.EnsureSuccessStatusCode();
@@ -142,8 +142,10 @@ public class SongControllerTest
         var id = parties.Single(p => p.Name == "test").Id;
         
         var getSongs = await _client.GetAsync($"Song/GetSongs?partyId={id}");
+
+        var songs = await getSongs.Content.ReadFromJsonAsync<ICollection<Song>>();
         
-        Assert.Equal(HttpStatusCode.NotFound, getSongs.StatusCode);
+        Assert.Equal(0, songs.Count);
     }
 
     [Fact]
