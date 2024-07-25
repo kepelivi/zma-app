@@ -161,12 +161,9 @@ void AddAuthentication()
         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-            var issuerSignInKey = config["IssuerSigningKey"] != null
-                ? config["IssuerSigningKey"] : Environment.GetEnvironmentVariable("ISSUERSIGNINGKEY");
-            var validIssuer = config["ValidIssuer"] != null
-                ? config["ValidIssuer"] : Environment.GetEnvironmentVariable("VALIDISSUER");
-            var validAudience = config["ValidAudience"] != null
-                ? config["ValidAudience"] : Environment.GetEnvironmentVariable("VALIDAUDIENCE");
+            var issuerSignInKey = config["IssuerSigningKey"] ?? Environment.GetEnvironmentVariable("ISSUERSIGNINGKEY");
+            var validIssuer = config["ValidIssuer"] ?? Environment.GetEnvironmentVariable("VALIDISSUER");
+            var validAudience = config["ValidAudience"] ?? Environment.GetEnvironmentVariable("VALIDAUDIENCE");
         
             options.TokenValidationParameters = new TokenValidationParameters()
             {
