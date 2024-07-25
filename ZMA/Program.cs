@@ -142,9 +142,9 @@ void AddCors()
                     {
                         if (string.IsNullOrWhiteSpace(origin)) return false;
                         // Only add this to allow testing with localhost, remove this line in production!
-                        if (origin.ToLower().StartsWith("http://localhost")) return true;
+                        // if (origin.ToLower().StartsWith("http://localhost")) return true;
                         // Insert your production domain here.
-                        if (origin.ToLower().StartsWith("https://okztfpy-anonymous-8081.exp.direct")) return true;
+                        if (origin.ToLower().StartsWith("https://zma-app.onrender.com")) return true;
                         return false;
                     });
             });
