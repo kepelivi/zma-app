@@ -93,12 +93,16 @@ export default function songRequests() {
             <View style={styles.header}>
                 <Text style={styles.main}>Kért zenék</Text>
             </View>
-            <FlatList
+            {songs.length === 0 ? (
+                <View style={styles.messageContainer}>
+                    <Text style={styles.message}>Nincs még egy zenekérés sem.</Text>
+                </View>
+            ) : (<FlatList
                 data={songs}
                 renderItem={({ item }) => <SongCard song={item} onAccept={() => handleAccept(item.id)} onDeny={() => handleDeny(item.id)} />}
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.listContent}
-            />
+            />)}
         </SafeAreaView>
     )
 }
@@ -121,4 +125,12 @@ const styles = StyleSheet.create({
     listContent: {
         padding: 16,
     },
+    messageContainer: {
+        alignItems: 'center'
+    },
+    message: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#000',
+    }
 });

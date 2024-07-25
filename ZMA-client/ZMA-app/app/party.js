@@ -54,8 +54,6 @@ export default function PartyManager() {
 
     if (loading) return <Loading />
 
-    if (parties.length === 0) return <View><Text>Nincs még egy buli sem. Hozz létre egyet!</Text></View>
-
     return (
         <SafeAreaView style={styles.safeArea}>
             <LogOut />
@@ -68,12 +66,16 @@ export default function PartyManager() {
                     <Text style={styles.buttonText}>Buli létrehozás</Text>
                 </Pressable>
             </View>
-            <FlatList
+            {parties.length === 0 ? (
+                <View style={styles.messageContainer}>
+                    <Text style={styles.message}>Nincsenek még bulik. Hozz létre egyet!</Text>
+                </View>
+            ) : (<FlatList
                 data={parties}
                 renderItem={({ item }) => <PartyCard party={item} onPress={() => navigation.navigate('songRequests', { id: item.id })} onDelete={() => onDelete(item.id, setParties, setLoading)} />}
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.listContent}
-            />
+            />)}
         </SafeAreaView>
     )
 }
@@ -113,4 +115,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#FFFFFF',
     },
+    messageContainer: {
+        alignItems: 'center'
+    },
+    message: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#000',
+    }
 });
