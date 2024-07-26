@@ -17,4 +17,4 @@ Once a song request is made, it appears on the DJ's screen, enabling them to see
 - Docker
 
 ## Status :musical_score:
-This project is currently in development, with ongoing work to enhance its features and user experience. Deployed on site: https://zma-backend-latest.onrender.com/
+This project is currently in development, with ongoing work to enhance its features and user experience. Deployed on site: https://zma-app.onrender.com/
