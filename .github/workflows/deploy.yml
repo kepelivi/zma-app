@@ -40,15 +40,7 @@ jobs:
           cd ZMA
           docker push $DOCKER_USERNAME/zma-backend:latest
 
-      - name: Deploy to Render.com
+      - name: Trigger Deploy on Render
         env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-        run: |
-          IMAGE_URL=docker.io/kepelivi/zma-backend:latest
-          SERVICE_ID=srv-cq6l5h3v2p9s73cp8i70
-          curl -X PATCH -H "Authorization: Bearer $RENDER_API_KEY" \
-               -H "Accept: application/json" \
-               -H "Content-Type: application/json" \
-               --data '{"service": {"envVars": {"DOCKER_IMAGE": {"value": "'"$IMAGE_URL"'"}}}}' \
-               https://api.render.com/v1/services/$SERVICE_ID
-
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl -X POST $RENDER_DEPLOY_HOOK
