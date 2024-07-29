@@ -24,27 +24,27 @@ jobs:
       - name: Build Docker image
         run: |
           cd ZMA
-          docker build -t zma-backend:${{ github.sha }} .
+          docker build -t zma-backend .
 
       - name: Tag Docker image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           cd ZMA
-          docker tag zma-backend:${{ github.sha }} $DOCKER_USERNAME/zma-backend:${{ github.sha }}
+          docker tag zma-backend:latest $DOCKER_USERNAME/zma-backend:latest
 
       - name: Push Docker image
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           cd ZMA
-          docker push $DOCKER_USERNAME/zma-backend:${{ github.sha }}
+          docker push $DOCKER_USERNAME/zma-backend:latest
 
       - name: Deploy to Render.com
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          IMAGE_URL=zma-backend:${{ github.sha }}
+          IMAGE_URL=zma-backend:latest
           SERVICE_ID=srv-cq6l5h3v2p9s73cp8i70
           curl -X PATCH -H "Authorization: Bearer $RENDER_API_KEY" \
                -H "Accept: application/json" \
