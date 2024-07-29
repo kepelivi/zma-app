@@ -1,0 +1,45 @@
+name: Build and Deploy Docker Image
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Navigate to the directory with the Dockerfile
+        run: cd ZMA
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          cd ZMA
+          docker build -t zma-backend:${{ github.sha }} .
+
+      - name: Push Docker image
+        run: |
+          cd ZMA
+          docker push zma-backend:${{ github.sha }}
+
+      - name: Deploy to Render.com
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          IMAGE_URL=zma-backend:${{ github.sha }}
+          SERVICE_ID=srv-cq6l5h3v2p9s73cp8i70
+          curl -X PATCH -H "Authorization: Bearer $RENDER_API_KEY" \
+               -H "Accept: application/json" \
+               -H "Content-Type: application/json" \
+               --data '{"service": {"envVars": {"DOCKER_IMAGE": {"value": "'"$IMAGE_URL"'"}}}}' \
+               https://api.render.com/v1/services/$SERVICE_ID
+
