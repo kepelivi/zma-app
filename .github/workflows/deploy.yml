@@ -26,10 +26,19 @@ jobs:
           cd ZMA
           docker build -t zma-backend:${{ github.sha }} .
 
-      - name: Push Docker image
+      - name: Tag Docker image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           cd ZMA
-          docker push zma-backend:${{ github.sha }}
+          docker tag zma-backend:${{ github.sha }} $DOCKER_USERNAME/zma-backend:${{ github.sha }}
+
+      - name: Push Docker image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        run: |
+          cd ZMA
+          docker push $DOCKER_USERNAME/zma-backend:${{ github.sha }}
 
       - name: Deploy to Render.com
         env:
