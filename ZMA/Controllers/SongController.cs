@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using ZMA.Hubs;
 using ZMA.Model;
 using ZMA.Services.Repositories;
 using Host = ZMA.Model.Host;
@@ -11,7 +13,8 @@ namespace ZMA.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class SongController(ISongRepository songRepository, UserManager<Host> userManager, ILogger logger) : ControllerBase
+public class SongController(ISongRepository songRepository, UserManager<Host> userManager,
+    ILogger logger, IHubContext<SongRequestHub> hubContext) : ControllerBase
 {
     
     [HttpPost("RequestSong")]
@@ -22,6 +25,8 @@ public class SongController(ISongRepository songRepository, UserManager<Host> us
             var song = new Song() { Title = title, RequestTime = DateTime.UtcNow, Accepted = false, PartyId = partyId};
             
             var requestedSong = await songRepository.RequestSong(song);
+
+            await hubContext.Clients.All.SendAsync("receiveSongRequestUpdate", requestedSong);
 
             return Ok(requestedSong);
         }
