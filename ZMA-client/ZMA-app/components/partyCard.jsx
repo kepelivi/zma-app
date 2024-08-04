@@ -1,6 +1,12 @@
 import { Text, View, Pressable, StyleSheet } from "react-native";
+import { useState } from "react";
+import { url } from "../constants/config";
+import { COLORS } from "../constants/theme";
+import QRCodeGenerator from "./QRCode";
 
 export default function PartyCard({ party, onDelete, onPress }) {
+  const [value, setValue] = useState(null);
+
     return (
         <View style={styles.card}>
             <Pressable onPress={onPress} style={styles.cardContent}>
@@ -17,6 +23,10 @@ export default function PartyCard({ party, onDelete, onPress }) {
             ]}>
                 <Text style={styles.deleteButtonText}>Törlés</Text>
             </Pressable>
+            <Pressable style={styles.qrGenerateButton} onPress={() => setValue(`${url}requestSong?partyId=${party.id}`)}>
+              <Text style={styles.qrGenerateButtonText}>QR kód létrehozása</Text>
+            </Pressable>
+            {value && (<QRCodeGenerator value={value} />)}
         </View>
     )
 }
@@ -64,6 +74,16 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     deleteButtonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+    },
+    qrGenerateButton: {
+      backgroundColor: COLORS.deepPurple,
+      padding: 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    qrGenerateButtonText: {
       color: '#fff',
       fontWeight: 'bold',
     },
