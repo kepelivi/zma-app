@@ -1,0 +1,36 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore ZMA
+    - name: Build
+      run: dotnet build ZMA.sln
+    - name: Test
+      env:
+        HOSTROLE: ${{ secrets.HOSTROLE }}
+        HOSTPASSWORD: ${{ secrets.HOSTPASSWORD }}
+        ISSUERSIGNINGKEY: ${{ secrets.ISSUERSIGNINGKEY }}
+        VALIDISSUER: ${{ secrets.VALIDISSUER }}
+        VALIDAUDIENCE: ${{ secrets.VALIDAUDIENCE }}
+        
+      run: dotnet test ZMAIntegrationTest --verbosity normal

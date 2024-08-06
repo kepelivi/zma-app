@@ -1,6 +1,7 @@
 import { View, Text, Pressable, StyleSheet, SafeAreaView, FlatList } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
+import { HubConnectionBuilder } from '@microsoft/signalr';
 
 import SongCard from '../components/songCard';
 import Logo from '../components/logo';
@@ -12,6 +13,7 @@ import GoBack from '../components/back';
 export default function songRequests() {
     const [songs, setSongs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [connection, setConnection] = useState(null);
 
     const route = useRoute();
     const { params } = route;
@@ -23,7 +25,18 @@ export default function songRequests() {
                 credentials: 'include',
                 headers: { 'Content-type': 'application/json' }
             });
-        return await res.json();
+        const data = await res.json();
+        setSongs(data);
+        return data;
+    }
+
+    async function setUpConnection() {
+        const newConnection = new HubConnectionBuilder()
+            .withUrl(`${apiUrl}songRequestHub`)
+            .withAutomaticReconnect()
+            .build();
+
+        setConnection(newConnection);
     }
 
     async function handleAccept(songId) {
@@ -37,7 +50,7 @@ export default function songRequests() {
             if (!res.ok) {
                 throw new Error("Something went wrong");
             }
-            fetchAndSortSongs();
+            fetchSongs();
         }
         catch (error) {
             console.log(error);
@@ -55,7 +68,7 @@ export default function songRequests() {
             if (!res.ok) {
                 throw new Error("Something went wrong");
             }
-            fetchAndSortSongs();
+            fetchSongs();
         }
         catch (error) {
             console.log(error);
@@ -79,8 +92,24 @@ export default function songRequests() {
     }
 
     useEffect(() => {
-        fetchAndSortSongs();
+        fetchSongs()
+            .then(() => {
+                setLoading(false);
+            })
+        setUpConnection();
     }, []);
+
+    useEffect(() => {
+        if (connection) {
+            connection.start()
+                .then(result => {
+                    connection.on('receiveSongRequestUpdate', song => {
+                        setSongs(prev => [...prev, song]);
+                    });
+                })
+                .catch(e => console.log('Connection failed: ', e));
+        }
+    }, [connection]);
 
     if (loading) return <Loading />
 

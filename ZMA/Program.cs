@@ -1,10 +1,12 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ZMA.Data;
+using ZMA.Hubs;
 using ZMA.Services.Authentication;
 using ZMA.Services.Repositories;
 using ZMA.Utility;
@@ -28,6 +30,7 @@ var config =
         .Build();
 
 builder.Configuration.AddConfiguration(config);
+builder.Services.AddSignalR();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -61,10 +64,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("MyAllowSpecificOrigins");
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<SongRequestHub>("/songRequestHub");
 
 using var scope = app.Services.CreateScope();
 
@@ -146,7 +151,7 @@ void AddCors()
                     {
                         if (string.IsNullOrWhiteSpace(origin)) return false;
                         // Only add this to allow testing with localhost, remove this line in production!
-                        // if (origin.ToLower().StartsWith("http://localhost")) return true;
+                        if (origin.ToLower().StartsWith("http://localhost")) return true;
                         // Insert your production domain here.
                         if (origin.ToLower().StartsWith("https://zma-app.onrender.com")) return true;
                         return false;
