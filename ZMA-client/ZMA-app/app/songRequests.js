@@ -9,11 +9,13 @@ import { COLORS } from '../constants/theme';
 import { apiUrl } from "../constants/config";
 import Loading from '../components/loading';
 import GoBack from '../components/back';
+import CollapsibleView from '../components/collapsableView';
 
 export default function songRequests() {
     const [songs, setSongs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [connection, setConnection] = useState(null);
+    const [acceptedSongs, setAcceptedSongs] = useState([]);
 
     const route = useRoute();
     const { params } = route;
@@ -26,7 +28,17 @@ export default function songRequests() {
                 headers: { 'Content-type': 'application/json' }
             });
         const data = await res.json();
-        setSongs(data);
+
+        const newSongs = [];
+        const newAcceptedSongs = [];
+
+        data.forEach(song => {
+            song.accepted ? newAcceptedSongs.push(song) : newSongs.push(song);
+        });
+
+        setSongs(newSongs);
+        setAcceptedSongs(newAcceptedSongs);
+
         return data;
     }
 
@@ -75,22 +87,6 @@ export default function songRequests() {
         }
     }
 
-    async function fetchAndSortSongs() {
-        try {
-            const songs = await fetchSongs();
-
-            const sortedSongs = songs.sort((a, b) => {
-                return new Date(b.requestTime) - new Date(a.requestTime);
-            });
-
-            setSongs(sortedSongs);
-        } catch (error) {
-            console.error('Failed to fetch and sort songs', error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
         fetchSongs()
             .then(() => {
@@ -124,12 +120,14 @@ export default function songRequests() {
                 <View style={styles.messageContainer}>
                     <Text style={styles.message}>Nincs még egy zenekérés sem.</Text>
                 </View>
-            ) : (<FlatList
+            ) : (<><FlatList
                 data={songs}
                 renderItem={({ item }) => <SongCard song={item} onAccept={() => handleAccept(item.id)} onDeny={() => handleDeny(item.id)} />}
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.listContent}
-            />)}
+            />
+                <CollapsibleView title="Elfogadott zenék" songs={acceptedSongs} />
+            </>)}
         </SafeAreaView>
     )
 }
