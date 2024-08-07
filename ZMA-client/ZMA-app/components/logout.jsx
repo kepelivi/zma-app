@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, Dimensions, Image } from "react-native";
 import { useNavigation } from "expo-router";
 
 import { COLORS } from "../constants/theme";
@@ -10,6 +10,8 @@ export function eraseCookie(name) {
 
 export default function LogOut() {
     const navigation = useNavigation();
+    const { width } = Dimensions.get('window');
+    const isMobile = width < 600;
 
     async function logout() {
         const res = await fetch(`${apiUrl}Auth/Logout`, {
@@ -26,8 +28,8 @@ export default function LogOut() {
 
     return (
         <View style={styles.container}>
-            <Pressable style={styles.pressable} onPress={logout}>
-                <Text style={styles.text}>Kijelentkezés</Text>
+            <Pressable style={styles.pre} onPress={logout}>
+                <Image source={require('../assets/logout.png')} style={styles.logout} />
             </Pressable>
         </View>
     )
@@ -35,23 +37,22 @@ export default function LogOut() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-end',
-        padding: 16,
-    },
-    pressable: {
-        backgroundColor: COLORS.deepPurple,
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: COLORS.deepPurple,
-        padding: 10,
         position: 'absolute',
         top: 16,
         right: 16,
+        zIndex: 10,
+    },
+    pressable: {
+        backgroundColor: COLORS.white,
+        paddingHorizontal: 20,
+        justifyContent: 'center',
     },
     text: {
-        color: COLORS.white,
+        color: COLORS.black,
         fontWeight: 'bold',
     },
+    logout: {
+        width: 40,
+        height: 40,
+    }
 });
