@@ -63,17 +63,7 @@ export default function requestSong() {
 
 const styles = StyleSheet.create({
     safeArea: {
-        backgroundColor: '#fff',
-    },
-    header: {
-        padding: 16,
-        backgroundColor: COLORS.deepPurple,
-        alignItems: 'center',
-    },
-    main: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#fff',
+        flex: 1,
     },
     container: {
         flex: 1,
@@ -83,7 +73,8 @@ const styles = StyleSheet.create({
     mainText: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: COLORS.deepPurple,
+        color: COLORS.accent,
+        marginBottom: 20,
     },
     button: {
         justifyContent: 'center',
@@ -91,7 +82,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 24,
         borderRadius: 8,
-        backgroundColor: COLORS.purple,
+        backgroundColor: COLORS.ashAndCreme,
         marginTop: 16,
     },
     buttonText: {
@@ -107,6 +98,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 16,
         backgroundColor: COLORS.white,
+        width: '80%',
     },
     inputContainer: {
         width: '80%',

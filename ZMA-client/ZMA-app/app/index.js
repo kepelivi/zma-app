@@ -15,8 +15,8 @@ export default function Home() {
       <Logo />
       <StatusBar style="auto" />
       <Login />
-      <Text>Vendég vagy?</Text>
-      <Text>Scanneld be a QR kódot!</Text>
+      <Text style={styles.main}>Vendég vagy?</Text>
+      <Text style={styles.text}>Scanneld be a QR kódot!</Text>
       <Camera />
     </View>
   );
@@ -30,7 +30,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   main: {
-    fontSize: 30,
-    backgroundColor: COLORS.purple
+    fontSize: 20,
+    color: COLORS.black,
+    fontWeight: '500',
+  },
+  text: {
+    fontSize: 17,
+    color: COLORS.greyish
   }
 });

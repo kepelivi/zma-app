@@ -3,8 +3,6 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import SongCard from '../../components/songCard';
 import '@testing-library/jest-native/extend-expect';
 
-import { COLORS } from '../../constants/theme';
-
 global.fetch = jest.fn();
 
 describe('SongCard component', () => {
@@ -28,26 +26,5 @@ describe('SongCard component', () => {
         const { getByText } = render(<SongCard song={song} />)
 
         expect(getByText("test")).toBeTruthy();
-    });
-
-    test('should change color if song gets accepted', () => {
-        const onAccept = jest.fn();
-        const onDeny = jest.fn();
-
-        const { getByText, rerender } = render(
-            <SongCard song={song} onAccept={onAccept} onDeny={onDeny} />
-        );
-
-        const acceptButton = getByText("Elfogad");
-        fireEvent.press(acceptButton);
-
-        expect(onAccept).toHaveBeenCalled();
-
-        const acceptedSong = { ...song, accepted: true };
-        rerender(<SongCard song={acceptedSong} onAccept={onAccept} onDeny={onDeny} />);
-
-        const card = getByText("test").parent.parent.parent.parent;
-
-        expect(card).toHaveStyle({ backgroundColor: COLORS.greyish });
     });
 });

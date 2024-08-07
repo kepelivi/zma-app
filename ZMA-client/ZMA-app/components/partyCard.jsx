@@ -17,10 +17,7 @@ export default function PartyCard({ party, onDelete, onPress }) {
                     <Text style={styles.date}>{party.date.split("T").shift()}</Text>
                 </View>
             </Pressable>
-            <Pressable onPress={onDelete} style={({ pressed }) => [
-                styles.deleteButton,
-                { backgroundColor: pressed ? '#7c1d82' : '#9c27b0' }
-            ]}>
+            <Pressable onPress={onDelete} style={styles.deleteButton}>
                 <Text style={styles.deleteButtonText}>Törlés</Text>
             </Pressable>
             <Pressable style={styles.qrGenerateButton} onPress={() => setValue(`${url}requestSong?partyId=${party.id}`)}>
@@ -34,7 +31,7 @@ export default function PartyCard({ party, onDelete, onPress }) {
 const styles = StyleSheet.create({
     card: {
       borderRadius: 10,
-      backgroundColor: '#fff',
+      backgroundColor: COLORS.greyish,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.3,
@@ -50,25 +47,25 @@ const styles = StyleSheet.create({
     title: {
       fontSize: 20,
       fontWeight: 'bold',
-      color: '#3f0257',
+      color: COLORS.white,
     },
     details: {
       fontSize: 16,
-      color: '#3f0257',
+      color: COLORS.ashAndCreme,
       marginVertical: 4,
     },
     category: {
       fontSize: 16,
-      color: '#9c27b0',
+      color: COLORS.ashAndCreme,
       marginVertical: 4,
     },
     date: {
       fontSize: 14,
-      color: '#3f0257',
+      color: COLORS.white,
       marginVertical: 4,
     },
     deleteButton: {
-      backgroundColor: '#9c27b0',
+      backgroundColor: COLORS.accent,
       padding: 10,
       justifyContent: 'center',
       alignItems: 'center',
@@ -76,9 +73,10 @@ const styles = StyleSheet.create({
     deleteButtonText: {
       color: '#fff',
       fontWeight: 'bold',
+      fontSize: 'medium',
     },
     qrGenerateButton: {
-      backgroundColor: COLORS.deepPurple,
+      backgroundColor: COLORS.ashAndCreme,
       padding: 10,
       justifyContent: 'center',
       alignItems: 'center',

@@ -111,23 +111,29 @@ export default function songRequests() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <GoBack />
-            <Logo />
-            <View style={styles.header}>
-                <Text style={styles.main}>Kért zenék</Text>
-            </View>
-            {songs.length === 0 ? (
-                <View style={styles.messageContainer}>
-                    <Text style={styles.message}>Nincs még egy zenekérés sem.</Text>
+            <View style={styles.fixedContainer}>
+                <GoBack />
+                <Logo />
+                <View style={styles.header}>
+                    <Text style={styles.main}>Kért zenék</Text>
                 </View>
-            ) : (<><FlatList
-                data={songs}
-                renderItem={({ item }) => <SongCard song={item} onAccept={() => handleAccept(item.id)} onDeny={() => handleDeny(item.id)} />}
-                keyExtractor={item => item.id}
-                contentContainerStyle={styles.listContent}
-            />
-                <CollapsibleView title="Elfogadott zenék" songs={acceptedSongs} />
-            </>)}
+            </View>
+            <View style={styles.listContainer}>
+                {songs.length === 0 ? (
+                    <View style={styles.messageContainer}>
+                        <Text style={styles.message}>Nincs még egy zenekérés sem.</Text>
+                    </View>
+                ) : (
+                    <>
+                        <FlatList
+                            data={songs}
+                            renderItem={({ item }) => <SongCard song={item} onAccept={() => handleAccept(item.id)} onDeny={() => handleDeny(item.id)} />}
+                            keyExtractor={item => item.id}
+                            contentContainerStyle={styles.listContent}
+                        />
+                    </>)}
+                <CollapsibleView title="Elfogadott zenék" songs={acceptedSongs} onDelete={handleDeny} />
+            </View>
         </SafeAreaView>
     )
 }
@@ -135,12 +141,17 @@ export default function songRequests() {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#fff',
     },
     header: {
         padding: 16,
-        backgroundColor: COLORS.deepPurple,
+        backgroundColor: COLORS.ashAndCreme,
         alignItems: 'center',
+        width: '110%',
+    },
+    fixedContainer: {
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        padding: 12,
     },
     main: {
         fontSize: 24,
@@ -150,8 +161,14 @@ const styles = StyleSheet.create({
     listContent: {
         padding: 16,
     },
+    listContainer: {
+        flex: 1,
+        marginTop: 16,
+    },
     messageContainer: {
-        alignItems: 'center'
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
     },
     message: {
         fontSize: 20,

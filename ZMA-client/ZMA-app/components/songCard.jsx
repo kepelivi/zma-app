@@ -4,7 +4,7 @@ import { COLORS } from "../constants/theme";
 
 export default function SongCard({ song, onAccept, onDeny }) {
     return (
-        <View style={[styles.card, song.accepted && styles.acceptedCard]}>
+        <View style={styles.card}>
             <View style={styles.cardContent}>
                 <Text style={styles.title}>{song.title}</Text>
                 <Text style={styles.time}>{song.requestTime.split("T").shift()} - {song.requestTime.split("T").pop().split('.').shift()}</Text>
@@ -23,14 +23,11 @@ export default function SongCard({ song, onAccept, onDeny }) {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: COLORS.accent,
         padding: 16,
         borderRadius: 8,
         marginBottom: 16,
         elevation: 2,
-    },
-    acceptedCard: {
-        backgroundColor: COLORS.greyish,
     },
     cardContent: {
         marginBottom: 16,
@@ -38,11 +35,11 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#9c27b0',
+        color: COLORS.white,
         marginBottom: 8,
     },
     time: {
-        color: '#3f0257',
+        color: COLORS.ashAndCreme,
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -58,11 +55,11 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     accept: {
-        backgroundColor: '#66bb6a',
+        backgroundColor: COLORS.ashAndCreme,
         color: '#FFFFFF',
     },
     deny: {
-        backgroundColor: '#ef5350',
+        backgroundColor: COLORS.greyish,
         color: '#FFFFFF',
     },
 });

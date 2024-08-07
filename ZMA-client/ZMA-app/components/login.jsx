@@ -30,7 +30,6 @@ const Login = () => {
     };
 
     async function handleLogin(email, password) {
-        styles.button.backgroundColor = "black";
         try {
             const res = await fetch(`${apiUrl}Auth/Login`, {
                 method: 'POST',
@@ -98,6 +97,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         marginBottom: 20,
+        marginLeft: 24,
     },
     input: {
         width: 300,
@@ -109,9 +109,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: 'black',
         paddingRight: 40,
+        marginRight: 24,
     },
     button: {
-        backgroundColor: '#9c27b0',
+        backgroundColor: COLORS.accent,
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 5,
