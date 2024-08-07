@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableWithoutFeedback, Animated, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, Animated, StyleSheet, FlatList, Pressable, Image } from 'react-native';
 
 import { COLORS } from '../constants/theme';
 
-export default function CollapsibleView({ title, songs }) {
+export default function CollapsibleView({ title, songs, onDelete }) {
     const [collapsed, setCollapsed] = useState(true);
     const [animation] = useState(new Animated.Value(0));
 
@@ -30,7 +30,7 @@ export default function CollapsibleView({ title, songs }) {
     });
 
     return (
-        <View style={styles.safeArea}>
+        <View style={styles.container}>
             <TouchableWithoutFeedback onPress={toggleCollapse}>
                 <View style={styles.header}>
                     <Text style={styles.main}>{title}</Text>
@@ -39,7 +39,14 @@ export default function CollapsibleView({ title, songs }) {
             <Animated.View style={{ height: heightInterpolate }}>
                 <FlatList
                     data={songs}
-                    renderItem={({ item }) => <Text style={styles.title}>{item.title}</Text>}
+                    renderItem={({ item }) => (
+                        <View style={styles.itemContainer}>
+                            <Text style={styles.title}>{item.title}</Text>
+                            <Pressable onLongPress={() => onDelete(item.id)}>
+                                <Image source={require('../assets/x-mark.png')} style={styles.deleteMark}/>
+                            </Pressable>
+                        </View>
+                    )}
                     keyExtractor={item => item.id}
                     contentContainerStyle={styles.titleContainer}
                 />
@@ -49,9 +56,12 @@ export default function CollapsibleView({ title, songs }) {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        zIndex: 10,
+    },
     header: {
         padding: 16,
-        backgroundColor: COLORS.deepPurple,
+        backgroundColor: COLORS.accent,
         alignItems: 'center',
         cursor: 'pointer',
     },
@@ -60,13 +70,26 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#fff',
     },
+    itemContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+    },
     title: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#9c27b0',
+        color: COLORS.black,
         marginBottom: 8,
+        marginRight: 12,
     },
     titleContainer: {
         alignItems: 'center',
     },
+    deleteMark: {
+        width: 20,
+        height: 20,
+        marginBottom: 5,
+    }
 })
