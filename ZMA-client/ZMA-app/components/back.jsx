@@ -21,13 +21,17 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         padding: 16,
+        zIndex: 10,
     },
     backButton: {
-        backgroundColor: COLORS.deepPurple,
+        backgroundColor: COLORS.black,
         borderWidth: 1,
         borderRadius: 5,
-        borderColor: COLORS.greyish,
-        padding: 10,
+        borderColor: COLORS.black,
+        padding: 8,
+        justifyContent: 'center',
+        height: 35,
+        width: 35
     },
     text: {
         color: COLORS.white,
