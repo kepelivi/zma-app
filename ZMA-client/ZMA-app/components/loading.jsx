@@ -6,7 +6,7 @@ import { COLORS } from '../constants/theme';
 export default function Loading({ message = "Loading..." }) {
     return (
         <View style={styles.container}>
-          <ActivityIndicator size="large" color="#9c27b0" />
+          <ActivityIndicator size="large" color={COLORS.accent} />
           <Text style={styles.text}>{message}</Text>
         </View>
       );
